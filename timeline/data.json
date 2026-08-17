@@ -1,0 +1,1381 @@
+{
+  "generatedAt": "2026-07-03T07:16:59.286Z",
+  "tagUrl": "https://makerworld.com/zh/community/tag?name=the%20Great%20Benchy%20Nations",
+  "summary": {
+    "totalPosts": 444,
+    "hotScore": 1568,
+    "dateRange": [
+      "2026-04-23T03:15:31+08:00",
+      "2026-07-03T12:20:16+08:00"
+    ],
+    "uniqueUsers": 85,
+    "totalLikes": 2562,
+    "totalComments": 4269,
+    "tagUrl": "https://makerworld.com/zh/community/tag?name=the%20Great%20Benchy%20Nations",
+    "fetchedNote": "全量 444 条动态 · community-service API · 2026/07/03"
+  },
+  "flow": [
+    {
+      "date": "4/23",
+      "label": "创世：@ItzMpower 提出 Benchy 诸国规则"
+    },
+    {
+      "date": "5/14–5/18",
+      "label": "第一次爆发：新闻 RP + 建国潮（5/18 单日 27 帖）"
+    },
+    {
+      "date": "6/11–6/13",
+      "label": "组织化高峰：UBN、派系、地图、BOM 子话题"
+    },
+    {
+      "date": "6/23–6/25",
+      "label": "制度化：人口普查 + 世界地图大版本"
+    },
+    {
+      "date": "6/26–6/28",
+      "label": "战争高潮：@xreme 核打击 → Vote-kick"
+    },
+    {
+      "date": "6/29–7/1",
+      "label": "战后重建：创作者流失焦虑、劫狱剧情"
+    },
+    {
+      "date": "7/2–7/3",
+      "label": "与 #Renew MakerWorld 合流：MMGA、停战呼吁"
+    }
+  ],
+  "phases": [
+    {
+      "id": 0,
+      "name": "创世期：规则诞生",
+      "start": "2026-04-23",
+      "end": "2026-04-30",
+      "posts": 8,
+      "likes": 56,
+      "comments": 129,
+      "avgComments": "16.1",
+      "topTheme": "建国/招募、早期结盟",
+      "topUsers": [
+        [
+          "ItzMpower",
+          1
+        ],
+        [
+          "GabeTechInd",
+          1
+        ],
+        [
+          "Frog3D",
+          1
+        ]
+      ],
+      "description": "@ItzMpower 定规则，@GabeTechInd 招募 UBE；Benchy 成为社区通用符号，低门槛建国 RP 启动。",
+      "milestones": [
+        {
+          "id": 1747255,
+          "handle": "ItzMpower",
+          "name": "ItzMpower",
+          "publishTime": "2026-04-23T03:15:31+08:00",
+          "dateLabel": "4/23 03:15",
+          "likeCount": 13,
+          "commentCount": 34,
+          "referredCount": 1,
+          "heat": 82,
+          "text": "We need to create benchy nations, this means anyone with a benchy army can create theyre own country no names allowed twice and no real countries. (also share pics of youre army if you want) #The Great Benchy Nations #Benchy",
+          "summary": "话题原点：提出「任何人有 Benchy 军队即可建国」，国名不可重复、不可用真实国名。",
+          "postUrl": "https://makerworld.com/zh/community/post/1747255",
+          "profileUrl": "https://makerworld.com/@ItzMpower"
+        },
+        {
+          "id": 1747901,
+          "handle": "GabeTechInd",
+          "name": "𝕲𝖆𝖇𝖊𝕋𝕖𝕔𝕙Iɳԃ",
+          "publishTime": "2026-04-23T19:48:16+08:00",
+          "dateLabel": "4/23 19:48",
+          "likeCount": 5,
+          "commentCount": 11,
+          "referredCount": 0,
+          "heat": 27,
+          "text": "#the Great Benchy Nations If anyone wants to join my army, please do these three things! 1) Follow me! 2) Make a post and tag me. 3) In the post established in 2, mark it with #The United Benchys of Engineering I am ready for troops! 🫡",
+          "summary": "UBE（United Benchys of Engineering）招募令，早期派系形成。",
+          "postUrl": "https://makerworld.com/zh/community/post/1747901",
+          "profileUrl": "https://makerworld.com/@GabeTechInd"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "萌芽期：话题诞生与早期建国",
+      "start": "2026-05-01",
+      "end": "2026-06-10",
+      "posts": 223,
+      "likes": 1399,
+      "comments": 2207,
+      "avgComments": "9.9",
+      "topTheme": "建国/招募 (105)",
+      "topUsers": [
+        {
+          "handle": "ItzMpower",
+          "count": 30,
+          "profileUrl": "https://makerworld.com/@ItzMpower"
+        },
+        {
+          "handle": "PocketArmourCO",
+          "count": 24,
+          "profileUrl": "https://makerworld.com/@PocketArmourCO"
+        },
+        {
+          "handle": "Cyber_Maker",
+          "count": 22,
+          "profileUrl": "https://makerworld.com/@Cyber_Maker"
+        },
+        {
+          "handle": "itzok",
+          "count": 15,
+          "profileUrl": "https://makerworld.com/@itzok"
+        },
+        {
+          "handle": "blufufuf3D",
+          "count": 11,
+          "profileUrl": "https://makerworld.com/@blufufuf3D"
+        },
+        {
+          "handle": "WV4AM",
+          "count": 9,
+          "profileUrl": "https://makerworld.com/@WV4AM"
+        },
+        {
+          "handle": "dcoolmstr8",
+          "count": 8,
+          "profileUrl": "https://makerworld.com/@dcoolmstr8"
+        },
+        {
+          "handle": "Frog3D",
+          "count": 8,
+          "profileUrl": "https://makerworld.com/@Frog3D"
+        }
+      ],
+      "description": "5 月新闻连载与建国潮占主导；社区开始自觉维护话题排名。",
+      "milestones": [
+        {
+          "id": 1766745,
+          "handle": "blufufuf3D",
+          "name": "Flexi Fin Studio",
+          "publishTime": "2026-05-14T07:24:25+08:00",
+          "dateLabel": "5/14 07:24",
+          "likeCount": 8,
+          "commentCount": 89,
+          "referredCount": 0,
+          "heat": 186,
+          "text": "",
+          "summary": "Benchy Nation News 连载帖：分区天气与边境预警（评论聚合，89 评）。",
+          "postUrl": "https://makerworld.com/zh/community/post/1766745",
+          "profileUrl": "https://makerworld.com/@blufufuf3D"
+        },
+        {
+          "id": 1773035,
+          "handle": "WV4AM",
+          "name": "🎇3𝓓 𝓟𝓻𝓲𝓷𝓽 𝓦𝓲𝔃𝓪𝓻𝓭🎇",
+          "publishTime": "2026-05-21T07:39:35+08:00",
+          "dateLabel": "5/21 07:39",
+          "likeCount": 9,
+          "commentCount": 52,
+          "referredCount": 0,
+          "heat": 113,
+          "text": "#the Great Benchy Nations #Revive Maker World Calling all UBN members and nations!! The war between @xreme and @GabeTechInd is affecting",
+          "summary": "UBN 总统号召：@xreme 与 @GabeTechInd 战争影响全体成员国，要求站队与援助。",
+          "postUrl": "https://makerworld.com/zh/community/post/1773035",
+          "profileUrl": "https://makerworld.com/@WV4AM"
+        },
+        {
+          "id": 1774395,
+          "handle": "WV4AM",
+          "name": "🎇3𝓓 𝓟𝓻𝓲𝓷𝓽 𝓦𝓲𝔃𝓪𝓻𝓭🎇",
+          "publishTime": "2026-05-23T02:28:19+08:00",
+          "dateLabel": "5/23 02:28",
+          "likeCount": 9,
+          "commentCount": 56,
+          "referredCount": 0,
+          "heat": 121,
+          "text": "#the Great Benchy Nations #Benchy Nation News #Revive Maker World This is the Head of the UBN speaking:",
+          "summary": "UBN 元首就 Xtreme Benchy Nations 战争发表官方回应声明。",
+          "postUrl": "https://makerworld.com/zh/community/post/1774395",
+          "profileUrl": "https://makerworld.com/@WV4AM"
+        },
+        {
+          "id": 1776769,
+          "handle": "WV4AM",
+          "name": "🎇3𝓓 𝓟𝓻𝓲𝓷𝓽 𝓦𝓲𝔃𝓪𝓻𝓭🎇",
+          "publishTime": "2026-05-25T22:17:52+08:00",
+          "dateLabel": "5/25 22:17",
+          "likeCount": 11,
+          "commentCount": 48,
+          "referredCount": 0,
+          "heat": 107,
+          "text": "#the Great Benchy Nations #Revive Maker World @LL7053 Good morning, UBN. With the defeat of @xreme",
+          "summary": "xreme 战败后领土分割方案；「Good morning, UBN」战后秩序安排。",
+          "postUrl": "https://makerworld.com/zh/community/post/1776769",
+          "profileUrl": "https://makerworld.com/@WV4AM"
+        },
+        {
+          "id": 1790419,
+          "handle": "itzok",
+          "name": "itzok",
+          "publishTime": "2026-06-10T03:54:44+08:00",
+          "dateLabel": "6/10 03:54",
+          "likeCount": 19,
+          "commentCount": 69,
+          "referredCount": 5,
+          "heat": 162,
+          "text": "#the Great Benchy Nations OH NO WE FELL BELOW 1K POPULARITY VALUE, GUYS COMMENT, MAKE POSTS, AND LIKE EVERYTHING IN THIS TOPIC",
+          "summary": "号召拯救话题热度：「跌破 1K popularity，大家评论发帖点赞」。",
+          "postUrl": "https://makerworld.com/zh/community/post/1790419",
+          "profileUrl": "https://makerworld.com/@itzok"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "组织化：UBN 体系与地图基建",
+      "start": "2026-06-11",
+      "end": "2026-06-22",
+      "posts": 124,
+      "likes": 725,
+      "comments": 1171,
+      "avgComments": "9.4",
+      "topTheme": "建国/招募 (44)",
+      "topUsers": [
+        {
+          "handle": "Northeast3Dd",
+          "count": 17,
+          "profileUrl": "https://makerworld.com/@Northeast3Dd"
+        },
+        {
+          "handle": "rabdom3D",
+          "count": 9,
+          "profileUrl": "https://makerworld.com/@rabdom3D"
+        },
+        {
+          "handle": "BoneForgePrints",
+          "count": 9,
+          "profileUrl": "https://makerworld.com/@BoneForgePrints"
+        },
+        {
+          "handle": "SilkPLA",
+          "count": 8,
+          "profileUrl": "https://makerworld.com/@SilkPLA"
+        },
+        {
+          "handle": "CosmosDestroyer",
+          "count": 7,
+          "profileUrl": "https://makerworld.com/@CosmosDestroyer"
+        },
+        {
+          "handle": "itzok",
+          "count": 5,
+          "profileUrl": "https://makerworld.com/@itzok"
+        },
+        {
+          "handle": "Br3n_65432",
+          "count": 5,
+          "profileUrl": "https://makerworld.com/@Br3n_65432"
+        },
+        {
+          "handle": "Jedieed",
+          "count": 5,
+          "profileUrl": "https://makerworld.com/@Jedieed"
+        }
+      ],
+      "description": "UBN 组织化、@Cyber_Maker 地图、@Northeast3Dd 推动 BOM 国家机构 RP。",
+      "milestones": [
+        {
+          "id": 1791306,
+          "handle": "Northeast3Dd",
+          "name": "Northeast 3D design",
+          "publishTime": "2026-06-11T02:32:54+08:00",
+          "dateLabel": "6/11 02:32",
+          "likeCount": 11,
+          "commentCount": 44,
+          "referredCount": 0,
+          "heat": 99,
+          "text": "",
+          "summary": "@Northeast3Dd 宣布成立 GBN 首家「保险公司 / 打印农场」机构。",
+          "postUrl": "https://makerworld.com/zh/community/post/1791306",
+          "profileUrl": "https://makerworld.com/@Northeast3Dd"
+        },
+        {
+          "id": 1791401,
+          "handle": "WV4AM",
+          "name": "🎇3𝓓 𝓟𝓻𝓲𝓷𝓽 𝓦𝓲𝔃𝓪𝓻𝓭🎇",
+          "publishTime": "2026-06-11T04:24:06+08:00",
+          "dateLabel": "6/11 04:24",
+          "likeCount": 7,
+          "commentCount": 36,
+          "referredCount": 0,
+          "heat": 79,
+          "text": "#the Great Benchy Nations @blufufuf3D This is the President of the UBN with an update on the post I made concerning Rules of the Great Benchy Nations. However the following rules only pertain to members of the UBN. Here's the highlights:",
+          "summary": "#the Great Benchy Nations @blufufuf3D This is the President of the UBN with an update on the post I made concerning Rules of the Great Benchy Nations. However…",
+          "postUrl": "https://makerworld.com/zh/community/post/1791401",
+          "profileUrl": "https://makerworld.com/@WV4AM"
+        },
+        {
+          "id": 1793641,
+          "handle": "Northeast3Dd",
+          "name": "Northeast 3D design",
+          "publishTime": "2026-06-13T23:57:59+08:00",
+          "dateLabel": "6/13 23:57",
+          "likeCount": 8,
+          "commentCount": 33,
+          "referredCount": 0,
+          "heat": 74,
+          "text": "i am starting the first #the Great Benchy Nations insurance company! print farm! like a good benchy, print farm is there! @WV4AM @blufufuf3D @itzok @CosmosDestroyer",
+          "summary": "宣布成立 GBN 首家保险公司 / 打印农场，@ 多位 UBN 核心成员。",
+          "postUrl": "https://makerworld.com/zh/community/post/1793641",
+          "profileUrl": "https://makerworld.com/@Northeast3Dd"
+        },
+        {
+          "id": 1795357,
+          "handle": "doggylover",
+          "name": "FlashForgeFactory",
+          "publishTime": "2026-06-16T01:12:45+08:00",
+          "dateLabel": "6/16 01:12",
+          "likeCount": 5,
+          "commentCount": 52,
+          "referredCount": 1,
+          "heat": 110,
+          "text": "#benchy nation news #the Great Benchy Nations",
+          "summary": "Benchy Nation News：敌军使用「冷却板」武器袭击测试场。",
+          "postUrl": "https://makerworld.com/zh/community/post/1795357",
+          "profileUrl": "https://makerworld.com/@doggylover"
+        },
+        {
+          "id": 1796177,
+          "handle": "Cyber_Maker",
+          "name": "CyberMaker",
+          "publishTime": "2026-06-17T01:27:39+08:00",
+          "dateLabel": "6/17 01:27",
+          "likeCount": 13,
+          "commentCount": 51,
+          "referredCount": 0,
+          "heat": 115,
+          "text": "#the Great Benchy Nations Here is the latest official map of the benchy world",
+          "summary": "发布 benchy world 官方地图最新版。",
+          "postUrl": "https://makerworld.com/zh/community/post/1796177",
+          "profileUrl": "https://makerworld.com/@Cyber_Maker"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "制度化：人口普查与世界地图",
+      "start": "2026-06-23",
+      "end": "2026-06-25",
+      "posts": 18,
+      "likes": 96,
+      "comments": 205,
+      "avgComments": "11.4",
+      "topTheme": "建国/招募 (6)",
+      "topUsers": [
+        {
+          "handle": "PocketArmourCO",
+          "count": 4,
+          "profileUrl": "https://makerworld.com/@PocketArmourCO"
+        },
+        {
+          "handle": "dcoolmstr8",
+          "count": 2,
+          "profileUrl": "https://makerworld.com/@dcoolmstr8"
+        },
+        {
+          "handle": "wolf0418",
+          "count": 2,
+          "profileUrl": "https://makerworld.com/@wolf0418"
+        },
+        {
+          "handle": "blufufuf3D",
+          "count": 2,
+          "profileUrl": "https://makerworld.com/@blufufuf3D"
+        },
+        {
+          "handle": "Jedieed",
+          "count": 2,
+          "profileUrl": "https://makerworld.com/@Jedieed"
+        },
+        {
+          "handle": "howtohomemade",
+          "count": 1,
+          "profileUrl": "https://makerworld.com/@howtohomemade"
+        },
+        {
+          "handle": "user_711489510",
+          "count": 1,
+          "profileUrl": "https://makerworld.com/@user_711489510"
+        },
+        {
+          "handle": "CosmosDestroyer",
+          "count": 1,
+          "profileUrl": "https://makerworld.com/@CosmosDestroyer"
+        }
+      ],
+      "description": "发帖量下降但评论密度上升；Census 与地图成为互动抓手。",
+      "milestones": [
+        {
+          "id": 1800779,
+          "handle": "CosmosDestroyer",
+          "name": "BenchVader",
+          "publishTime": "2026-06-23T06:37:31+08:00",
+          "dateLabel": "6/23 06:37",
+          "likeCount": 6,
+          "commentCount": 29,
+          "referredCount": 0,
+          "heat": 64,
+          "text": "#the Great Benchy Nations #Ubn Here is the fully updated UBN nations map along with some non UBN. For any revisions, let me know in the comments below. Also, I am thinking about adding space around the map for new nations. Let me kno in the poll what you think. @WV4AM…",
+          "summary": "#the Great Benchy Nations #Ubn Here is the fully updated UBN nations map along with some non UBN. For any revisions, let me know in the comments below. Also, I…",
+          "postUrl": "https://makerworld.com/zh/community/post/1800779",
+          "profileUrl": "https://makerworld.com/@CosmosDestroyer"
+        },
+        {
+          "id": 1801405,
+          "handle": "wolf0418",
+          "name": "Wolf0418",
+          "publishTime": "2026-06-24T04:45:57+08:00",
+          "dateLabel": "6/24 04:45",
+          "likeCount": 7,
+          "commentCount": 39,
+          "referredCount": 1,
+          "heat": 86,
+          "text": "#the Great Benchy Nations Census #the Great Benchy Nations",
+          "summary": "启动 Great Benchy Nations Census（6/23–6/30），评论登记国名与同盟。",
+          "postUrl": "https://makerworld.com/zh/community/post/1801405",
+          "profileUrl": "https://makerworld.com/@wolf0418"
+        },
+        {
+          "id": 1801993,
+          "handle": "blufufuf3D",
+          "name": "Flexi Fin Studio",
+          "publishTime": "2026-06-25T02:02:14+08:00",
+          "dateLabel": "6/25 02:02",
+          "likeCount": 4,
+          "commentCount": 19,
+          "referredCount": 0,
+          "heat": 42,
+          "text": "#the Great Benchy Nations #Benchy Nation News #Benchy Nation News-Emergency Weather",
+          "summary": "#the Great Benchy Nations #Benchy Nation News #Benchy Nation News-Emergency Weather",
+          "postUrl": "https://makerworld.com/zh/community/post/1801993",
+          "profileUrl": "https://makerworld.com/@blufufuf3D"
+        },
+        {
+          "id": 1802030,
+          "handle": "PocketArmourCO",
+          "name": "Pocket Armour Co.",
+          "publishTime": "2026-06-25T02:48:27+08:00",
+          "dateLabel": "6/25 02:48",
+          "likeCount": 5,
+          "commentCount": 14,
+          "referredCount": 0,
+          "heat": 33,
+          "text": "#the Great Benchy Nations 🔥 WAR ON TERROR — EVENT 3: THE ISLAND THAT BREATHES FIRE The world barely had time to mourn the first wave of attacks before the next ones struck. Explosions in distant ports. Sabotage in crowded cities.",
+          "summary": "新版世界地图发布（扩展 @Cyber_Maker 原作）。",
+          "postUrl": "https://makerworld.com/zh/community/post/1802030",
+          "profileUrl": "https://makerworld.com/@PocketArmourCO"
+        },
+        {
+          "id": 1802033,
+          "handle": "Lukelikesplanes",
+          "name": "Lukie",
+          "publishTime": "2026-06-25T02:53:48+08:00",
+          "dateLabel": "6/25 02:53",
+          "likeCount": 5,
+          "commentCount": 20,
+          "referredCount": 0,
+          "heat": 45,
+          "text": "I have these 2 old printers in my office that i occasionally call “Boomer printers” jokingly, ever since the start of the year, i’ve been wanting to use them, as they do work, but have never printed anything with them, i’d like to use them for large prints (the larger Sunlu…",
+          "summary": "I have these 2 old printers in my office that i occasionally call “Boomer printers” jokingly, ever since the start of the year, i’ve been wanting to use them,…",
+          "postUrl": "https://makerworld.com/zh/community/post/1802033",
+          "profileUrl": "https://makerworld.com/@Lukelikesplanes"
+        },
+        {
+          "id": 1802748,
+          "handle": "PocketArmourCO",
+          "name": "Pocket Armour Co.",
+          "publishTime": "2026-06-25T23:10:24+08:00",
+          "dateLabel": "6/25 23:10",
+          "likeCount": 12,
+          "commentCount": 36,
+          "referredCount": 0,
+          "heat": 84,
+          "text": "#the Great Benchy Nations 🔥 NEW WORLD MAP ANNOUNCEMENT 🌍 After countless wars, shifting alliances, and the chaos of recent events, a new era has arrived — and with it, a brand‑new map to mark the moment! 🗺️ This updated world is based on @Cyber_Maker",
+          "summary": "#the Great Benchy Nations 🔥 NEW WORLD MAP ANNOUNCEMENT 🌍 After countless wars, shifting alliances, and the chaos of recent events, a new era has arrived —…",
+          "postUrl": "https://makerworld.com/zh/community/post/1802748",
+          "profileUrl": "https://makerworld.com/@PocketArmourCO"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "战争升级：xreme 核战主线",
+      "start": "2026-06-26",
+      "end": "2026-06-28",
+      "posts": 36,
+      "likes": 134,
+      "comments": 257,
+      "avgComments": "7.1",
+      "topTheme": "建国/招募 (15)",
+      "topUsers": [
+        {
+          "handle": "Jedieed",
+          "count": 7,
+          "profileUrl": "https://makerworld.com/@Jedieed"
+        },
+        {
+          "handle": "Northeast3Dd",
+          "count": 4,
+          "profileUrl": "https://makerworld.com/@Northeast3Dd"
+        },
+        {
+          "handle": "3dplaneguy",
+          "count": 4,
+          "profileUrl": "https://makerworld.com/@3dplaneguy"
+        },
+        {
+          "handle": "BoneForgePrints",
+          "count": 3,
+          "profileUrl": "https://makerworld.com/@BoneForgePrints"
+        },
+        {
+          "handle": "rabdom3D",
+          "count": 2,
+          "profileUrl": "https://makerworld.com/@rabdom3D"
+        },
+        {
+          "handle": "Simply_Engineer",
+          "count": 2,
+          "profileUrl": "https://makerworld.com/@Simply_Engineer"
+        },
+        {
+          "handle": "wolf0418",
+          "count": 1,
+          "profileUrl": "https://makerworld.com/@wolf0418"
+        },
+        {
+          "handle": "blufufuf3D",
+          "count": 1,
+          "profileUrl": "https://makerworld.com/@blufufuf3D"
+        }
+      ],
+      "description": "xreme 核战连续剧；Vote-kick 与 tag 滥用争议并发。",
+      "milestones": [
+        {
+          "id": 1802948,
+          "handle": "BoneForgePrints",
+          "name": "T̳e̳a̳m̳P̳u̳d̳d̳l̳e̳P̳u̳p̳p̳y̳",
+          "publishTime": "2026-06-26T04:28:46+08:00",
+          "dateLabel": "6/26 04:28",
+          "likeCount": 6,
+          "commentCount": 23,
+          "referredCount": 0,
+          "heat": 52,
+          "text": "#the Great Benchy Nations ATTENTION UBN! Xreme has returned! He has built up an army and is threatening members of the UBN. We need to rise up and quell this threat! He has made more than clear that he is not afraid of my forces. Let’s see how he handles the whole UBN. He…",
+          "summary": "#the Great Benchy Nations ATTENTION UBN! Xreme has returned! He has built up an army and is threatening members of the UBN. We need to rise up and quell this…",
+          "postUrl": "https://makerworld.com/zh/community/post/1802948",
+          "profileUrl": "https://makerworld.com/@BoneForgePrints"
+        },
+        {
+          "id": 1803425,
+          "handle": "Jedieed",
+          "name": "Jedieed",
+          "publishTime": "2026-06-26T22:45:46+08:00",
+          "dateLabel": "6/26 22:45",
+          "likeCount": 6,
+          "commentCount": 21,
+          "referredCount": 0,
+          "heat": 48,
+          "text": "#the Great Benchy Nations @xreme HAS NUKED ME. THIS IS AN IMMEDIATE EMERGENCY. AND A IMMEDIATE CALL TO ARMS ALL ALLIES PLEASE HELP SEND HELP NOW.",
+          "summary": "紧急战报：「@xreme HAS NUKED ME」——核战主线引爆。",
+          "postUrl": "https://makerworld.com/zh/community/post/1803425",
+          "profileUrl": "https://makerworld.com/@Jedieed"
+        },
+        {
+          "id": 1803794,
+          "handle": "3dplaneguy",
+          "name": "3D plane guy 🛩✈️",
+          "publishTime": "2026-06-27T09:26:04+08:00",
+          "dateLabel": "6/27 09:26",
+          "likeCount": 1,
+          "commentCount": 14,
+          "referredCount": 0,
+          "heat": 29,
+          "text": "what should i make? i'd like to make some more benchy models too scale #the Great Benchy Nations",
+          "summary": "讨论 tag 被无关帖滥用，@PocketArmourCO 介入规范话题使用。",
+          "postUrl": "https://makerworld.com/zh/community/post/1803794",
+          "profileUrl": "https://makerworld.com/@3dplaneguy"
+        },
+        {
+          "id": 1803850,
+          "handle": "3dplaneguy",
+          "name": "3D plane guy 🛩✈️",
+          "publishTime": "2026-06-27T12:10:54+08:00",
+          "dateLabel": "6/27 12:10",
+          "likeCount": 3,
+          "commentCount": 17,
+          "referredCount": 0,
+          "heat": 37,
+          "text": "hey, so on one of my recent posts, I tagged #the Great Benchy Nations and the user @PocketArmourCO",
+          "summary": "hey, so on one of my recent posts, I tagged #the Great Benchy Nations and the user @PocketArmourCO",
+          "postUrl": "https://makerworld.com/zh/community/post/1803850",
+          "profileUrl": "https://makerworld.com/@3dplaneguy"
+        },
+        {
+          "id": 1804378,
+          "handle": "WV4AM",
+          "name": "🎇3𝓓 𝓟𝓻𝓲𝓷𝓽 𝓦𝓲𝔃𝓪𝓻𝓭🎇",
+          "publishTime": "2026-06-28T03:48:22+08:00",
+          "dateLabel": "6/28 03:48",
+          "likeCount": 8,
+          "commentCount": 15,
+          "referredCount": 0,
+          "heat": 38,
+          "text": "#the Great Benchy Nations In lieu of the recent \"attacks\" by @xreme , I am starting a vote-kick to remove him from the Great Benchy Nations. When he was first destroyed and nuked by nearly every UBN member, the conditions were a full surrender and he was allowed no nukes or army.",
+          "summary": "Vote-kick @xreme：指控违反投降条约，社区投票是否驱逐。",
+          "postUrl": "https://makerworld.com/zh/community/post/1804378",
+          "profileUrl": "https://makerworld.com/@WV4AM"
+        },
+        {
+          "id": 1804603,
+          "handle": "mannmachines",
+          "name": "Mosspig Machines",
+          "publishTime": "2026-06-28T11:49:22+08:00",
+          "dateLabel": "6/28 11:49",
+          "likeCount": 2,
+          "commentCount": 16,
+          "referredCount": 0,
+          "heat": 34,
+          "text": "#the Great Benchy Nations due to the fact that xreme is back we would like to gather a task force of moraly backwards nations to kidnap and torture exremes commanders and impotant people",
+          "summary": "xreme 回归后，号召组建道德「落后国家」特遣队绑架其指挥官。",
+          "postUrl": "https://makerworld.com/zh/community/post/1804603",
+          "profileUrl": "https://makerworld.com/@mannmachines"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "战后重建与派系扩张",
+      "start": "2026-06-29",
+      "end": "2026-07-01",
+      "posts": 24,
+      "likes": 112,
+      "comments": 279,
+      "avgComments": "11.6",
+      "topTheme": "建国/招募 (13)",
+      "topUsers": [
+        {
+          "handle": "Jedieed",
+          "count": 3,
+          "profileUrl": "https://makerworld.com/@Jedieed"
+        },
+        {
+          "handle": "zacharyanddhd",
+          "count": 2,
+          "profileUrl": "https://makerworld.com/@zacharyanddhd"
+        },
+        {
+          "handle": "Northeast3Dd",
+          "count": 2,
+          "profileUrl": "https://makerworld.com/@Northeast3Dd"
+        },
+        {
+          "handle": "PocketArmourCO",
+          "count": 2,
+          "profileUrl": "https://makerworld.com/@PocketArmourCO"
+        },
+        {
+          "handle": "3651256543",
+          "count": 2,
+          "profileUrl": "https://makerworld.com/@3651256543"
+        },
+        {
+          "handle": "CosmosDestroyer",
+          "count": 2,
+          "profileUrl": "https://makerworld.com/@CosmosDestroyer"
+        },
+        {
+          "handle": "user_1886431402",
+          "count": 2,
+          "profileUrl": "https://makerworld.com/@user_1886431402"
+        },
+        {
+          "handle": "WV4AM",
+          "count": 1,
+          "profileUrl": "https://makerworld.com/@WV4AM"
+        }
+      ],
+      "description": "战后重建 + 大创作者流失焦虑；MANGO_MAN 劫狱续命战争线。",
+      "milestones": [
+        {
+          "id": 1805388,
+          "handle": "PocketArmourCO",
+          "name": "Pocket Armour Co.",
+          "publishTime": "2026-06-29T10:51:57+08:00",
+          "dateLabel": "6/29 10:51",
+          "likeCount": 3,
+          "commentCount": 22,
+          "referredCount": 1,
+          "heat": 48,
+          "text": "#the Great Benchy Nations IMPORTANT MEETING CALLED FOR ALL WHO PARTICIPATED IN THE WAR The short war is over and while tensions (and tempers) flared during the conflict it is time to use diplomacy. As stated by @WV4AM In his post explaining the cancellation of the vote to ban,…",
+          "summary": "战后外交会议：战争结束，呼吁各方降温，讨论 xreme 行为与误会。",
+          "postUrl": "https://makerworld.com/zh/community/post/1805388",
+          "profileUrl": "https://makerworld.com/@PocketArmourCO"
+        },
+        {
+          "id": 1805547,
+          "handle": "Northeast3Dd",
+          "name": "Northeast 3D design",
+          "publishTime": "2026-06-29T18:48:12+08:00",
+          "dateLabel": "6/29 18:48",
+          "likeCount": 11,
+          "commentCount": 46,
+          "referredCount": 17,
+          "heat": 120,
+          "text": "Hello, everybody. ive seen some big creators leaving and it makes me sad. The community is falling apart and #the Great Benchy Nations is one of the last holdouts. WE NEED TO KEEP OUR TOPIC ABOVE WATER! (no pun intended) If #the Great Benchy Nations fails the community will be…",
+          "summary": "大创作者流失焦虑：「若 GBN 失败，社区将消亡」；GBN 是最后堡垒。",
+          "postUrl": "https://makerworld.com/zh/community/post/1805547",
+          "profileUrl": "https://makerworld.com/@Northeast3Dd"
+        },
+        {
+          "id": 1805636,
+          "handle": "MANGO_MAN",
+          "name": "Hard boiled FIH",
+          "publishTime": "2026-06-29T20:52:35+08:00",
+          "dateLabel": "6/29 20:52",
+          "likeCount": 2,
+          "commentCount": 44,
+          "referredCount": 0,
+          "heat": 90,
+          "text": "#the Great Benchy Nations I have brok @xreme out of your prison slimed tour gaurds with xtremes war benchy on the docks buff your security lol",
+          "summary": "@MANGO_MAN 宣布已将 @xreme 从监禁中救出（44 评）。",
+          "postUrl": "https://makerworld.com/zh/community/post/1805636",
+          "profileUrl": "https://makerworld.com/@MANGO_MAN"
+        },
+        {
+          "id": 1805815,
+          "handle": "PocketArmourCO",
+          "name": "Pocket Armour Co.",
+          "publishTime": "2026-06-30T00:21:54+08:00",
+          "dateLabel": "6/30 00:21",
+          "likeCount": 6,
+          "commentCount": 20,
+          "referredCount": 0,
+          "heat": 46,
+          "text": "#the Great Benchy Nations Once we recapture @xreme from @MANGO_MAN which we will do, xreme will be taken to preferably 5e Benchial Federation, Allabenchia, or Benchpress as they are well defended, stable, and are the world leaders.",
+          "summary": "讨论从 @MANGO_MAN 手中夺回 @xreme 的关押与引渡方案。",
+          "postUrl": "https://makerworld.com/zh/community/post/1805815",
+          "profileUrl": "https://makerworld.com/@PocketArmourCO"
+        },
+        {
+          "id": 1806690,
+          "handle": "wolf0418",
+          "name": "Wolf0418",
+          "publishTime": "2026-07-01T01:11:08+08:00",
+          "dateLabel": "7/01 01:11",
+          "likeCount": 4,
+          "commentCount": 21,
+          "referredCount": 0,
+          "heat": 46,
+          "text": "#the Great Benchy Nations #the Great Benchy Nations Census The census has been completed and I have a full list of the great benchy nations. I assume there some missing, but please notify me the details of any nation that didnt comment. Benchiet Union @wolf0418 : Leader…",
+          "summary": "Census 完成，公布各国名册（Benchiet Union、Benchial Federation 等）。",
+          "postUrl": "https://makerworld.com/zh/community/post/1806690",
+          "profileUrl": "https://makerworld.com/@wolf0418"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Renew/MMGA 合流与社区自救",
+      "start": "2026-07-02",
+      "end": "2026-12-31",
+      "posts": 11,
+      "likes": 40,
+      "comments": 21,
+      "avgComments": "1.9",
+      "topTheme": "Renew/MMGA 交叉 (5)",
+      "topUsers": [
+        {
+          "handle": "xreme",
+          "count": 2,
+          "profileUrl": "https://makerworld.com/@xreme"
+        },
+        {
+          "handle": "Jedieed",
+          "count": 2,
+          "profileUrl": "https://makerworld.com/@Jedieed"
+        },
+        {
+          "handle": "wolf0418",
+          "count": 2,
+          "profileUrl": "https://makerworld.com/@wolf0418"
+        },
+        {
+          "handle": "CosmosDestroyer",
+          "count": 1,
+          "profileUrl": "https://makerworld.com/@CosmosDestroyer"
+        },
+        {
+          "handle": "McC4",
+          "count": 1,
+          "profileUrl": "https://makerworld.com/@McC4"
+        },
+        {
+          "handle": "PocketArmourCO",
+          "count": 1,
+          "profileUrl": "https://makerworld.com/@PocketArmourCO"
+        },
+        {
+          "handle": "coco0_0",
+          "count": 1,
+          "profileUrl": "https://makerworld.com/@coco0_0"
+        },
+        {
+          "handle": "Frog3D",
+          "count": 1,
+          "profileUrl": "https://makerworld.com/@Frog3D"
+        }
+      ],
+      "description": "GBN 暂时让位给 Renew/MMGA；反派 @xreme 也呼吁停战一起刷 NSFW。",
+      "milestones": [
+        {
+          "id": 1807730,
+          "handle": "xreme",
+          "name": "PrintPanda",
+          "publishTime": "2026-07-02T05:26:46+08:00",
+          "dateLabel": "7/02 05:26",
+          "likeCount": 7,
+          "commentCount": 3,
+          "referredCount": 0,
+          "heat": 13,
+          "text": "hello guys 5 minutes before this post 2 of my favorite makers left because of NSWF🙁 its sad to see so many people leave and i dont want to leave so i will stay and try my hardest to Renew MakerWorld (MakerWorld pleas go back you should know that this is going to end bad for you…",
+          "summary": "hello guys 5 minutes before this post 2 of my favorite makers left because of NSWF🙁 its sad to see so many people leave and i dont want to leave so i will…",
+          "postUrl": "https://makerworld.com/zh/community/post/1807730",
+          "profileUrl": "https://makerworld.com/@xreme"
+        },
+        {
+          "id": 1808210,
+          "handle": "xreme",
+          "name": "PrintPanda",
+          "publishTime": "2026-07-02T21:49:50+08:00",
+          "dateLabel": "7/02 21:49",
+          "likeCount": 6,
+          "commentCount": 1,
+          "referredCount": 0,
+          "heat": 8,
+          "text": "#the Great Benchy Nations guys lets ptake a break as we fight to stop NSFW ok cese fire",
+          "summary": "呼吁各方停火，先一起 fight NSFW，暂停 GBN 内战。",
+          "postUrl": "https://makerworld.com/zh/community/post/1808210",
+          "profileUrl": "https://makerworld.com/@xreme"
+        },
+        {
+          "id": 1808214,
+          "handle": "Jedieed",
+          "name": "Jedieed",
+          "publishTime": "2026-07-02T21:56:20+08:00",
+          "dateLabel": "7/02 21:56",
+          "likeCount": 3,
+          "commentCount": 5,
+          "referredCount": 0,
+          "heat": 13,
+          "text": "#the Great Benchy Nations now that the war is over, I get a chance to think all my allies and all the people who have supported me through this rough time I want to give a special thanks to @BoneForgePrints @SilkPLA @WV4AM @CosmosDestroyer",
+          "summary": "战争结束后反思：「now that the war is over」——转向和平 RP。",
+          "postUrl": "https://makerworld.com/zh/community/post/1808214",
+          "profileUrl": "https://makerworld.com/@Jedieed"
+        },
+        {
+          "id": 1808411,
+          "handle": "wolf0418",
+          "name": "Wolf0418",
+          "publishTime": "2026-07-03T02:19:33+08:00",
+          "dateLabel": "7/03 02:19",
+          "likeCount": 6,
+          "commentCount": 1,
+          "referredCount": 3,
+          "heat": 11,
+          "text": "#the Great Benchy Nations MakerWorld MMGA!!! Make Makerworld Great Again!!! Stop the NSFW and revive makerworld!!! Let's all take a break from fighting and spread the news!!! MMGA",
+          "summary": "提出 #MMGA，呼吁停战并联合 #Renew MakerWorld 传播。",
+          "postUrl": "https://makerworld.com/zh/community/post/1808411",
+          "profileUrl": "https://makerworld.com/@wolf0418"
+        },
+        {
+          "id": 1808776,
+          "handle": "wolf0418",
+          "name": "Wolf0418",
+          "publishTime": "2026-07-03T07:52:00+08:00",
+          "dateLabel": "7/03 07:52",
+          "likeCount": 2,
+          "commentCount": 6,
+          "referredCount": 0,
+          "heat": 14,
+          "text": "MakerWorld #the Great Benchy Nations Use tag",
+          "summary": "推广 #MMGA tag，叠加 Renew / Stopnsfw 等运动 tag。",
+          "postUrl": "https://makerworld.com/zh/community/post/1808776",
+          "profileUrl": "https://makerworld.com/@wolf0418"
+        },
+        {
+          "id": 1808901,
+          "handle": "Frog3D",
+          "name": "Frog3D",
+          "publishTime": "2026-07-03T12:20:16+08:00",
+          "dateLabel": "7/03 12:20",
+          "likeCount": 1,
+          "commentCount": 1,
+          "referredCount": 0,
+          "heat": 3,
+          "text": "@WorkshopBuilds @papacano @3DRIO @DudeOnThisApp @ProFisherMan13 @282929292 @LL7053",
+          "summary": "因 Renew 运动回归，问能否拿回自己的 benchy nation。",
+          "postUrl": "https://makerworld.com/zh/community/post/1808901",
+          "profileUrl": "https://makerworld.com/@Frog3D"
+        }
+      ]
+    }
+  ],
+  "topUsers": [
+    {
+      "handle": "PocketArmourCO",
+      "name": "Pocket Armour Co.",
+      "posts": 37,
+      "likes": 234,
+      "comments": 318,
+      "score": 871,
+      "profileUrl": "https://makerworld.com/@PocketArmourCO"
+    },
+    {
+      "handle": "ItzMpower",
+      "name": "ItzMpower",
+      "posts": 36,
+      "likes": 200,
+      "comments": 324,
+      "score": 850,
+      "profileUrl": "https://makerworld.com/@ItzMpower"
+    },
+    {
+      "handle": "Northeast3Dd",
+      "name": "Northeast 3D design",
+      "posts": 29,
+      "likes": 191,
+      "comments": 351,
+      "score": 912,
+      "profileUrl": "https://makerworld.com/@Northeast3Dd"
+    },
+    {
+      "handle": "Cyber_Maker",
+      "name": "CyberMaker",
+      "posts": 28,
+      "likes": 184,
+      "comments": 441,
+      "score": 1066,
+      "profileUrl": "https://makerworld.com/@Cyber_Maker"
+    },
+    {
+      "handle": "itzok",
+      "name": "itzok",
+      "posts": 20,
+      "likes": 146,
+      "comments": 228,
+      "score": 608,
+      "profileUrl": "https://makerworld.com/@itzok"
+    },
+    {
+      "handle": "Jedieed",
+      "name": "Jedieed",
+      "posts": 19,
+      "likes": 90,
+      "comments": 87,
+      "score": 264,
+      "profileUrl": "https://makerworld.com/@Jedieed"
+    },
+    {
+      "handle": "blufufuf3D",
+      "name": "Flexi Fin Studio",
+      "posts": 17,
+      "likes": 88,
+      "comments": 359,
+      "score": 807,
+      "profileUrl": "https://makerworld.com/@blufufuf3D"
+    },
+    {
+      "handle": "WV4AM",
+      "name": "🎇3𝓓 𝓟𝓻𝓲𝓷𝓽 𝓦𝓲𝔃𝓪𝓻𝓭🎇",
+      "posts": 15,
+      "likes": 125,
+      "comments": 419,
+      "score": 964,
+      "profileUrl": "https://makerworld.com/@WV4AM"
+    },
+    {
+      "handle": "CosmosDestroyer",
+      "name": "BenchVader",
+      "posts": 15,
+      "likes": 88,
+      "comments": 105,
+      "score": 298,
+      "profileUrl": "https://makerworld.com/@CosmosDestroyer"
+    },
+    {
+      "handle": "BoneForgePrints",
+      "name": "T̳e̳a̳m̳P̳u̳d̳d̳l̳e̳P̳u̳p̳p̳y̳",
+      "posts": 13,
+      "likes": 65,
+      "comments": 181,
+      "score": 428,
+      "profileUrl": "https://makerworld.com/@BoneForgePrints"
+    },
+    {
+      "handle": "dcoolmstr8",
+      "name": "dcoolmster8",
+      "posts": 12,
+      "likes": 51,
+      "comments": 37,
+      "score": 125,
+      "profileUrl": "https://makerworld.com/@dcoolmstr8"
+    },
+    {
+      "handle": "rabdom3D",
+      "name": "random 3D",
+      "posts": 12,
+      "likes": 61,
+      "comments": 65,
+      "score": 191,
+      "profileUrl": "https://makerworld.com/@rabdom3D"
+    },
+    {
+      "handle": "3D_Tech32",
+      "name": "3DTech",
+      "posts": 11,
+      "likes": 57,
+      "comments": 59,
+      "score": 175,
+      "profileUrl": "https://makerworld.com/@3D_Tech32"
+    },
+    {
+      "handle": "Frog3D",
+      "name": "Frog3D",
+      "posts": 10,
+      "likes": 42,
+      "comments": 71,
+      "score": 184,
+      "profileUrl": "https://makerworld.com/@Frog3D"
+    },
+    {
+      "handle": "Temoc_",
+      "name": "Temoc_",
+      "posts": 9,
+      "likes": 61,
+      "comments": 41,
+      "score": 143,
+      "profileUrl": "https://makerworld.com/@Temoc_"
+    }
+  ],
+  "themeRows": [
+    {
+      "name": "建国/招募",
+      "count": 188,
+      "pct": "42.3"
+    },
+    {
+      "name": "战争/冲突叙事",
+      "count": 78,
+      "pct": "17.6"
+    },
+    {
+      "name": "新闻/天气 RP",
+      "count": 66,
+      "pct": "14.9"
+    },
+    {
+      "name": "联盟/外交",
+      "count": 45,
+      "pct": "10.1"
+    },
+    {
+      "name": "地图/领土",
+      "count": 28,
+      "pct": "6.3"
+    },
+    {
+      "name": "其他 RP",
+      "count": 14,
+      "pct": "3.2"
+    },
+    {
+      "name": "人口普查/登记",
+      "count": 11,
+      "pct": "2.5"
+    },
+    {
+      "name": "Renew/MMGA 交叉",
+      "count": 7,
+      "pct": "1.6"
+    },
+    {
+      "name": "投票/治理",
+      "count": 7,
+      "pct": "1.6"
+    }
+  ],
+  "dailyPeaks": [
+    {
+      "date": "2026-05-18",
+      "posts": 27,
+      "comments": 257
+    },
+    {
+      "date": "2026-06-11",
+      "posts": 23,
+      "comments": 226
+    },
+    {
+      "date": "2026-06-12",
+      "posts": 20,
+      "comments": 176
+    },
+    {
+      "date": "2026-06-13",
+      "posts": 19,
+      "comments": 169
+    },
+    {
+      "date": "2026-05-29",
+      "posts": 17,
+      "comments": 102
+    },
+    {
+      "date": "2026-06-28",
+      "posts": 17,
+      "comments": 110
+    }
+  ],
+  "hotPosts": [
+    {
+      "id": 1766745,
+      "handle": "blufufuf3D",
+      "name": "Flexi Fin Studio",
+      "publishTime": "2026-05-14T07:24:25+08:00",
+      "dateLabel": "5/14 07:24",
+      "likeCount": 8,
+      "commentCount": 89,
+      "referredCount": 0,
+      "heat": 186,
+      "text": "",
+      "summary": "Benchy Nation News 连载帖：分区天气与边境预警（评论聚合，89 评）。",
+      "postUrl": "https://makerworld.com/zh/community/post/1766745",
+      "profileUrl": "https://makerworld.com/@blufufuf3D"
+    },
+    {
+      "id": 1790419,
+      "handle": "itzok",
+      "name": "itzok",
+      "publishTime": "2026-06-10T03:54:44+08:00",
+      "dateLabel": "6/10 03:54",
+      "likeCount": 19,
+      "commentCount": 69,
+      "referredCount": 5,
+      "heat": 162,
+      "text": "#the Great Benchy Nations OH NO WE FELL BELOW 1K POPULARITY VALUE, GUYS COMMENT, MAKE POSTS, AND LIKE EVERYTHING IN THIS TOPIC",
+      "summary": "号召拯救话题热度：「跌破 1K popularity，大家评论发帖点赞」。",
+      "postUrl": "https://makerworld.com/zh/community/post/1790419",
+      "profileUrl": "https://makerworld.com/@itzok"
+    },
+    {
+      "id": 1774395,
+      "handle": "WV4AM",
+      "name": "🎇3𝓓 𝓟𝓻𝓲𝓷𝓽 𝓦𝓲𝔃𝓪𝓻𝓭🎇",
+      "publishTime": "2026-05-23T02:28:19+08:00",
+      "dateLabel": "5/23 02:28",
+      "likeCount": 9,
+      "commentCount": 56,
+      "referredCount": 0,
+      "heat": 121,
+      "text": "#the Great Benchy Nations #Benchy Nation News #Revive Maker World This is the Head of the UBN speaking:",
+      "summary": "UBN 元首就 Xtreme Benchy Nations 战争发表官方回应声明。",
+      "postUrl": "https://makerworld.com/zh/community/post/1774395",
+      "profileUrl": "https://makerworld.com/@WV4AM"
+    },
+    {
+      "id": 1805547,
+      "handle": "Northeast3Dd",
+      "name": "Northeast 3D design",
+      "publishTime": "2026-06-29T18:48:12+08:00",
+      "dateLabel": "6/29 18:48",
+      "likeCount": 11,
+      "commentCount": 46,
+      "referredCount": 17,
+      "heat": 120,
+      "text": "Hello, everybody. ive seen some big creators leaving and it makes me sad. The community is falling apart and #the Great Benchy Nations is one of the last holdouts. WE NEED TO KEEP OUR TOPIC ABOVE WATER! (no pun intended) If #the Great Benchy Nations fails the community will be…",
+      "summary": "大创作者流失焦虑：「若 GBN 失败，社区将消亡」；GBN 是最后堡垒。",
+      "postUrl": "https://makerworld.com/zh/community/post/1805547",
+      "profileUrl": "https://makerworld.com/@Northeast3Dd"
+    },
+    {
+      "id": 1796177,
+      "handle": "Cyber_Maker",
+      "name": "CyberMaker",
+      "publishTime": "2026-06-17T01:27:39+08:00",
+      "dateLabel": "6/17 01:27",
+      "likeCount": 13,
+      "commentCount": 51,
+      "referredCount": 0,
+      "heat": 115,
+      "text": "#the Great Benchy Nations Here is the latest official map of the benchy world",
+      "summary": "发布 benchy world 官方地图最新版。",
+      "postUrl": "https://makerworld.com/zh/community/post/1796177",
+      "profileUrl": "https://makerworld.com/@Cyber_Maker"
+    },
+    {
+      "id": 1773035,
+      "handle": "WV4AM",
+      "name": "🎇3𝓓 𝓟𝓻𝓲𝓷𝓽 𝓦𝓲𝔃𝓪𝓻𝓭🎇",
+      "publishTime": "2026-05-21T07:39:35+08:00",
+      "dateLabel": "5/21 07:39",
+      "likeCount": 9,
+      "commentCount": 52,
+      "referredCount": 0,
+      "heat": 113,
+      "text": "#the Great Benchy Nations #Revive Maker World Calling all UBN members and nations!! The war between @xreme and @GabeTechInd is affecting",
+      "summary": "UBN 总统号召：@xreme 与 @GabeTechInd 战争影响全体成员国，要求站队与援助。",
+      "postUrl": "https://makerworld.com/zh/community/post/1773035",
+      "profileUrl": "https://makerworld.com/@WV4AM"
+    },
+    {
+      "id": 1795357,
+      "handle": "doggylover",
+      "name": "FlashForgeFactory",
+      "publishTime": "2026-06-16T01:12:45+08:00",
+      "dateLabel": "6/16 01:12",
+      "likeCount": 5,
+      "commentCount": 52,
+      "referredCount": 1,
+      "heat": 110,
+      "text": "#benchy nation news #the Great Benchy Nations",
+      "summary": "Benchy Nation News：敌军使用「冷却板」武器袭击测试场。",
+      "postUrl": "https://makerworld.com/zh/community/post/1795357",
+      "profileUrl": "https://makerworld.com/@doggylover"
+    },
+    {
+      "id": 1776769,
+      "handle": "WV4AM",
+      "name": "🎇3𝓓 𝓟𝓻𝓲𝓷𝓽 𝓦𝓲𝔃𝓪𝓻𝓭🎇",
+      "publishTime": "2026-05-25T22:17:52+08:00",
+      "dateLabel": "5/25 22:17",
+      "likeCount": 11,
+      "commentCount": 48,
+      "referredCount": 0,
+      "heat": 107,
+      "text": "#the Great Benchy Nations #Revive Maker World @LL7053 Good morning, UBN. With the defeat of @xreme",
+      "summary": "xreme 战败后领土分割方案；「Good morning, UBN」战后秩序安排。",
+      "postUrl": "https://makerworld.com/zh/community/post/1776769",
+      "profileUrl": "https://makerworld.com/@WV4AM"
+    },
+    {
+      "id": 1791306,
+      "handle": "Northeast3Dd",
+      "name": "Northeast 3D design",
+      "publishTime": "2026-06-11T02:32:54+08:00",
+      "dateLabel": "6/11 02:32",
+      "likeCount": 11,
+      "commentCount": 44,
+      "referredCount": 0,
+      "heat": 99,
+      "text": "",
+      "summary": "@Northeast3Dd 宣布成立 GBN 首家「保险公司 / 打印农场」机构。",
+      "postUrl": "https://makerworld.com/zh/community/post/1791306",
+      "profileUrl": "https://makerworld.com/@Northeast3Dd"
+    },
+    {
+      "id": 1772244,
+      "handle": "blufufuf3D",
+      "name": "Flexi Fin Studio",
+      "publishTime": "2026-05-20T08:55:50+08:00",
+      "dateLabel": "5/20 08:55",
+      "likeCount": 6,
+      "commentCount": 45,
+      "referredCount": 0,
+      "heat": 96,
+      "text": "",
+      "summary": "Benchy Nation News 图片帖（45 评，以评论区互动为主）。",
+      "postUrl": "https://makerworld.com/zh/community/post/1772244",
+      "profileUrl": "https://makerworld.com/@blufufuf3D"
+    },
+    {
+      "id": 1767202,
+      "handle": "WV4AM",
+      "name": "🎇3𝓓 𝓟𝓻𝓲𝓷𝓽 𝓦𝓲𝔃𝓪𝓻𝓭🎇",
+      "publishTime": "2026-05-14T22:03:22+08:00",
+      "dateLabel": "5/14 22:03",
+      "likeCount": 10,
+      "commentCount": 41,
+      "referredCount": 1,
+      "heat": 93,
+      "text": "Nation News #the Great Benchy Nations @blufufuf3D @ItzMpower @GabeTechInd",
+      "summary": "Nation News #the Great Benchy Nations @blufufuf3D @ItzMpower @GabeTechInd",
+      "postUrl": "https://makerworld.com/zh/community/post/1767202",
+      "profileUrl": "https://makerworld.com/@WV4AM"
+    },
+    {
+      "id": 1805636,
+      "handle": "MANGO_MAN",
+      "name": "Hard boiled FIH",
+      "publishTime": "2026-06-29T20:52:35+08:00",
+      "dateLabel": "6/29 20:52",
+      "likeCount": 2,
+      "commentCount": 44,
+      "referredCount": 0,
+      "heat": 90,
+      "text": "#the Great Benchy Nations I have brok @xreme out of your prison slimed tour gaurds with xtremes war benchy on the docks buff your security lol",
+      "summary": "@MANGO_MAN 宣布已将 @xreme 从监禁中救出（44 评）。",
+      "postUrl": "https://makerworld.com/zh/community/post/1805636",
+      "profileUrl": "https://makerworld.com/@MANGO_MAN"
+    },
+    {
+      "id": 1789381,
+      "handle": "LL7053",
+      "name": "The Trash Truck Titan",
+      "publishTime": "2026-06-09T00:57:14+08:00",
+      "dateLabel": "6/09 00:57",
+      "likeCount": 6,
+      "commentCount": 40,
+      "referredCount": 0,
+      "heat": 86,
+      "text": "hey guys im thinking of starting my own benchy Nations would you join it? #the Great Benchy Nations #Questions tell me in the comments",
+      "summary": "Benchy 新闻：@LL7053 与盟友在 Oil Sea 附近领土活动。",
+      "postUrl": "https://makerworld.com/zh/community/post/1789381",
+      "profileUrl": "https://makerworld.com/@LL7053"
+    },
+    {
+      "id": 1801405,
+      "handle": "wolf0418",
+      "name": "Wolf0418",
+      "publishTime": "2026-06-24T04:45:57+08:00",
+      "dateLabel": "6/24 04:45",
+      "likeCount": 7,
+      "commentCount": 39,
+      "referredCount": 1,
+      "heat": 86,
+      "text": "#the Great Benchy Nations Census #the Great Benchy Nations",
+      "summary": "启动 Great Benchy Nations Census（6/23–6/30），评论登记国名与同盟。",
+      "postUrl": "https://makerworld.com/zh/community/post/1801405",
+      "profileUrl": "https://makerworld.com/@wolf0418"
+    },
+    {
+      "id": 1802748,
+      "handle": "PocketArmourCO",
+      "name": "Pocket Armour Co.",
+      "publishTime": "2026-06-25T23:10:24+08:00",
+      "dateLabel": "6/25 23:10",
+      "likeCount": 12,
+      "commentCount": 36,
+      "referredCount": 0,
+      "heat": 84,
+      "text": "#the Great Benchy Nations 🔥 NEW WORLD MAP ANNOUNCEMENT 🌍 After countless wars, shifting alliances, and the chaos of recent events, a new era has arrived — and with it, a brand‑new map to mark the moment! 🗺️ This updated world is based on @Cyber_Maker",
+      "summary": "#the Great Benchy Nations 🔥 NEW WORLD MAP ANNOUNCEMENT 🌍 After countless wars, shifting alliances, and the chaos of recent events, a new era has arrived —…",
+      "postUrl": "https://makerworld.com/zh/community/post/1802748",
+      "profileUrl": "https://makerworld.com/@PocketArmourCO"
+    }
+  ]
+}

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>#the Great Benchy Nations · 社区时间线</title>
+  <style>
+    :root {
+      --bg: #f0f9ff;
+      --surface: #ffffff;
+      --border: #bae6fd;
+      --text: #0c4a6e;
+      --muted: #64748b;
+      --accent: #0284c7;
+      --accent-dim: #e0f2fe;
+      --gold: #f59e0b;
+      --gold-dim: #fffbeb;
+      --navy: #0f172a;
+      --shadow: 0 1px 3px rgba(15,23,42,.06), 0 8px 24px rgba(2,132,199,.08);
+      --mono: ui-monospace, "Cascadia Code", monospace;
+      --sans: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--sans); background: var(--bg); color: var(--text); line-height: 1.65; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .hero {
+      background: linear-gradient(135deg, #0c4a6e 0%, #0369a1 40%, #0e7490 100%);
+      color: #fff;
+      padding: 48px 24px 56px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 48px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 48'%3E%3Cpath fill='%23f0f9ff' d='M0 24 Q150 0 300 24 T600 24 T900 24 T1200 24 V48 H0Z'/%3E%3C/svg%3E") center bottom / cover no-repeat;
+    }
+    .hero-inner, .container { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      margin-bottom: 14px;
+    }
+    .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .hero p { color: rgba(255,255,255,.85); max-width: 720px; font-size: 15px; }
+    .hero-meta { margin-top: 18px; font-size: 13px; color: rgba(255,255,255,.65); display: flex; flex-wrap: wrap; gap: 12px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .hero-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 14px; border-radius: 8px; font-size: 13px; color: #fff;
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22);
+    }
+    .hero-link:hover { background: rgba(255,255,255,.2); text-decoration: none; }
+    .hero-link.gold { background: rgba(245,158,11,.25); border-color: rgba(245,158,11,.4); }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-top: -20px;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
+    }
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .stat-value { font-size: 1.6rem; font-weight: 800; color: var(--accent); line-height: 1.1; }
+    .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 28px;
+      padding: 36px 24px 72px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } .toc { position: static !important; } }
+
+    .toc {
+      position: sticky;
+      top: 20px;
+      align-self: start;
+      font-size: 13px;
+    }
+    .toc h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 10px; }
+    .toc a { display: block; padding: 5px 0; color: var(--muted); }
+    .toc a:hover { color: var(--accent); }
+
+    section { margin-bottom: 40px; }
+    section h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--accent-dim);
+    }
+    section p, section li { font-size: 14px; color: #334155; }
+    section ul { padding-left: 1.2rem; margin-top: 8px; }
+    section li { margin-bottom: 4px; }
+
+    .quote {
+      background: var(--accent-dim);
+      border-left: 4px solid var(--accent);
+      padding: 14px 16px;
+      border-radius: 0 10px 10px 0;
+      font-size: 14px;
+    }
+    .note { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+    .flow {
+      font-family: var(--mono);
+      font-size: 12px;
+      background: var(--navy);
+      color: #e2e8f0;
+      padding: 16px 18px;
+      border-radius: 10px;
+      white-space: pre-line;
+      line-height: 1.7;
+    }
+
+    .timeline { display: flex; flex-direction: column; gap: 20px; }
+    .tl-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+    }
+    .tl-date {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .tl-title { font-size: 1.05rem; font-weight: 800; margin: 4px 0 8px; }
+    .tl-desc { font-size: 13px; color: #475569; margin-bottom: 10px; }
+    .tl-meta {
+      display: flex; flex-wrap: wrap; gap: 8px 14px;
+      font-size: 12px; color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .tl-meta span { background: var(--accent-dim); padding: 2px 8px; border-radius: 6px; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); background: #f8fafc; }
+    tr:hover td { background: #f8fafc; }
+    .mono { font-family: var(--mono); font-size: 12px; }
+    .heat { font-weight: 700; color: var(--gold); }
+    .col-link { width: 72px; text-align: center; }
+
+    .post-link {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: var(--gold-dim);
+      color: #b45309;
+      border: 1px solid #fde68a;
+      white-space: nowrap;
+    }
+    .post-link:hover { background: #fef3c7; text-decoration: none; }
+
+    .user-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+    }
+    .user-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 13px;
+    }
+    .user-card strong { display: block; margin-bottom: 4px; }
+    .user-card .meta { font-size: 11px; color: var(--muted); }
+
+    .theme-bar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; margin: 12px 0; }
+    .theme-bar div { height: 100%; }
+    .theme-legend { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 6px; font-size: 12px; }
+    .theme-legend span::before {
+      content: "";
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 2px;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    .loading { text-align: center; padding: 80px 24px; color: var(--muted); }
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 12px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">MakerWorld 社区分析 · GBN</div>
+      <h1>#the Great Benchy Nations</h1>
+      <p>围绕 3DBenchy 小船的用户自发跑团宇宙：建国、结盟、核战争、人口普查——444 条动态、85 位参与者的完整时间线。</p>
+      <div class="hero-meta" id="hero-meta"></div>
+      <div class="hero-actions">
+        <a class="hero-link gold" id="tag-link" href="https://makerworld.com/zh/community/tag?name=the%20Great%20Benchy%20Nations" target="_blank" rel="noopener">↗ 话题页</a>
+        <a class="hero-link" href="https://gbn-game-e29a-dev.bbljsp.com" target="_blank" rel="noopener">🎮 GBN 经济赛季游戏</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="layout" id="app">
+    <nav class="toc">
+      <h3>目录</h3>
+      <a href="#summary">一句话总结</a>
+      <a href="#what">这是什么</a>
+      <a href="#overview">时间线总览</a>
+      <a href="#phases">分阶段详解</a>
+      <a href="#users">核心用户</a>
+      <a href="#themes">主题分布</a>
+      <a href="#hot">热门动态</a>
+    </nav>
+    <main id="main">
+      <div class="loading">加载时间线数据…</div>
+    </main>
+  </div>
+
+  <footer id="footer"></footer>
+
+  <script>
+    const THEME_COLORS = ["#0284c7","#f59e0b","#8b5cf6","#10b981","#ef4444","#6366f1","#ec4899","#14b8a6","#64748b"];
+
+    function esc(s) {
+      return String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    }
+
+    function render(data) {
+      const s = data.summary;
+      document.getElementById("hero-meta").innerHTML = [
+        `<span>数据：${esc(s.fetchedNote)}</span>`,
+        `<span>${esc(s.dateRange[0].slice(0,10))} → ${esc(s.dateRange[1].slice(0,10))}</span>`,
+      ].join("");
+      document.getElementById("tag-link").href = data.tagUrl;
+
+      document.getElementById("stats").innerHTML = [
+        ["444", "动态总数"],
+        ["1,568", "讨论度"],
+        ["85", "参与账号"],
+        ["4,269", "总评论"],
+        ["9.6", "均帖评论"],
+      ].map(([v,l]) => `<div class="stat"><div class="stat-value">${v}</div><div class="stat-label">${l}</div></div>`).join("");
+
+      const flowText = data.flow.map((f) => `${f.date.padEnd(14)} ${f.label}`).join("\n       ↓\n");
+
+      let html = `
+        <section id="summary">
+          <h2>一句话总结</h2>
+          <div class="quote">
+            GBN 是 MakerWorld 上从 4 月底自发长出的 Benchy 跑团宇宙：用户建国、结盟、开战、画地图、搞普查；
+            6 月下旬 xreme 核战争连续剧达到叙事高峰；7 月初与 #Renew MakerWorld / MMGA 合流。
+            核心不是比模型，而是比谁能把故事演下去、把更多人卷进来。
+          </div>
+        </section>
+
+        <section id="what">
+          <h2>这是什么</h2>
+          <p><strong>以 3DBenchy 为符号的社区即兴叙事（跑团）</strong>，不是官方赛事：</p>
+          <ul>
+            <li>用户自建虚构国家、设军衔、结盟、宣战、发「新闻」</li>
+            <li>打印照片是证据道具，文字 + @ + 投票是推进引擎</li>
+            <li>UBN（United Benchy Nations）是最大联盟组织</li>
+            <li>子话题：<code>#Census</code> <code>#Benchy Nation News</code> <code>#Ubn</code> 等</li>
+          </ul>
+        </section>
+
+        <section id="overview">
+          <h2>时间线总览</h2>
+          <div class="flow">${esc(flowText)}</div>
+          <p class="note">阶段边界按发帖主题聚类；热度峰值为 5/18（27 帖）、6/11–6/13（连续高密度）。</p>
+        </section>
+
+        <section id="phases">
+          <h2>分阶段详解</h2>
+          <div class="timeline">
+            ${data.phases.map((ph) => `
+              <div class="tl-item" id="phase-${ph.id}">
+                <div class="tl-date">阶段 ${ph.id} · ${ph.start} ~ ${ph.end}</div>
+                <div class="tl-title">${esc(ph.name)}</div>
+                ${ph.description ? `<p class="tl-desc">${esc(ph.description)}</p>` : ""}
+                <div class="tl-meta">
+                  <span>${ph.posts} 帖</span>
+                  <span>${ph.likes} 赞</span>
+                  <span>${ph.comments} 评</span>
+                  <span>均评 ${ph.avgComments || "—"}</span>
+                  <span>主题：${esc(ph.topTheme)}</span>
+                </div>
+                ${ph.topUsers && ph.topUsers.length ? `<p class="note">活跃用户：${ph.topUsers.map((u) => `<a href="${u.profileUrl || "#"}" target="_blank" rel="noopener">@${esc(u.handle || u[0])}</a>(${u.count || u[1]})`).join(" · ")}</p>` : ""}
+                <table>
+                  <thead><tr><th>时间</th><th>用户</th><th>赞/评</th><th>节点摘要</th><th class="col-link">原动态</th></tr></thead>
+                  <tbody>
+                    ${(ph.milestones || []).map((m) => `
+                      <tr>
+                        <td class="mono">${esc(m.dateLabel)}</td>
+                        <td class="mono"><a href="${m.profileUrl}" target="_blank" rel="noopener">@${esc(m.handle)}</a></td>
+                        <td>${m.likeCount} / <span class="heat">${m.commentCount}</span></td>
+                        <td>${esc(m.summary)}</td>
+                        <td class="col-link"><a class="post-link" href="${m.postUrl}" target="_blank" rel="noopener">查看</a></td>
+                      </tr>
+                    `).join("")}
+                  </tbody>
+                </table>
+              </div>
+            `).join("")}
+          </div>
+        </section>
+
+        <section id="users">
+          <h2>核心参与用户</h2>
+          <div class="user-grid">
+            ${data.topUsers.map((u) => `
+              <div class="user-card">
+                <strong><a href="${u.profileUrl}" target="_blank" rel="noopener">@${esc(u.handle)}</a></strong>
+                <div>${esc(u.name)}</div>
+                <div class="meta">${u.posts} 帖 · ${u.likes} 赞 · ${u.comments} 评 · 热度 ${u.score}</div>
+              </div>
+            `).join("")}
+          </div>
+        </section>
+
+        <section id="themes">
+          <h2>内容主题分布</h2>
+          <div class="theme-bar">
+            ${data.themeRows.map((t, i) => `<div style="width:${t.pct}%;background:${THEME_COLORS[i % THEME_COLORS.length]}"></div>`).join("")}
+          </div>
+          <div class="theme-legend">
+            ${data.themeRows.map((t, i) => `<span style="--c:${THEME_COLORS[i % THEME_COLORS.length]}"><span style="background:var(--c)" class="dot"></span>${esc(t.name)} ${t.count} (${t.pct}%)</span>`).join("")}
+          </div>
+        </section>
+
+        <section id="hot">
+          <h2>全话题热门动态 Top 15</h2>
+          <table>
+            <thead><tr><th>时间</th><th>用户</th><th>热度</th><th>摘要</th><th class="col-link">原动态</th></tr></thead>
+            <tbody>
+              ${data.hotPosts.map((m) => `
+                <tr>
+                  <td class="mono">${esc(m.dateLabel)}</td>
+                  <td class="mono"><a href="${m.profileUrl}" target="_blank" rel="noopener">@${esc(m.handle)}</a></td>
+                  <td class="heat">${m.heat}</td>
+                  <td>${esc(m.summary)}</td>
+                  <td class="col-link"><a class="post-link" href="${m.postUrl}" target="_blank" rel="noopener">查看</a></td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </section>
+      `;
+
+      document.getElementById("main").innerHTML = html;
+      document.getElementById("footer").textContent =
+        `生成于 ${data.generatedAt.slice(0, 19).replace("T", " ")} UTC · 数据来源 MakerWorld community-service API`;
+    }
+
+    fetch("data.json")
+      .then((r) => r.json())
+      .then(render)
+      .catch((e) => {
+        document.getElementById("main").innerHTML =
+          `<div class="loading">加载失败：${esc(e.message)}<br>请先运行 npm run build 生成 data.json</div>`;
+      });
+  </script>
+</body>
+</html>

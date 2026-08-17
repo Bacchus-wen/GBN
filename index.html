@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GBN 离线包 · Great Benchy Nations</title>
+  <style>
+    :root {
+      --bg: #0c4a6e;
+      --card: #ffffff;
+      --accent: #0284c7;
+      --gold: #f59e0b;
+      --text: #0f172a;
+      --muted: #64748b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      background: linear-gradient(160deg, #0c4a6e 0%, #0369a1 50%, #0e7490 100%);
+      min-height: 100vh;
+      color: #fff;
+      padding: 48px 20px;
+    }
+    .wrap { max-width: 720px; margin: 0 auto; }
+    h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); margin-bottom: 10px; }
+    p.lead { color: rgba(255,255,255,.85); line-height: 1.7; margin-bottom: 28px; }
+    .cards { display: grid; gap: 14px; }
+    a.card {
+      display: block;
+      background: var(--card);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 20px 22px;
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgba(15,23,42,.15);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    a.card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(15,23,42,.2);
+    }
+    .card h2 { font-size: 1.1rem; margin-bottom: 6px; color: var(--accent); }
+    .card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+    .tag {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #b45309;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .note {
+      margin-top: 28px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: rgba(255,255,255,.88);
+    }
+    code { background: rgba(0,0,0,.2); padding: 1px 6px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>GBN 离线浏览包</h1>
+    <p class="lead">Great Benchy Nations 活动页与社区时间线的本地副本。解压后请使用本地服务器打开（活动页为 ES Module，直接双击 HTML 可能无法加载）。</p>
+
+    <div class="cards">
+      <a class="card" href="./activity/index.html">
+        <h2>活动页 · GBN Economy Season</h2>
+        <p>建设国家、查看里程碑、周任务与社区动态的交互式活动页。</p>
+        <span class="tag">React SPA</span>
+      </a>
+      <a class="card" href="./timeline/index.html">
+        <h2>社区时间线 · #the Great Benchy Nations</h2>
+        <p>444 条动态、85 位参与者的完整时间线分析与热门帖子索引。</p>
+        <span class="tag">静态页 + data.json</span>
+      </a>
+    </div>
+
+    <div class="note">
+      <strong>推荐打开方式：</strong>双击运行 <code>启动本地服务器.bat</code>，浏览器访问
+      <code>http://localhost:8080/</code>。也可手动执行：
+      <code>python -m http.server 8080</code> 或 <code>npx serve -l 8080</code>。
+      <br><br>
+      原站地址：
+      <a href="https://gbn-activity-e29a-dev.bbljsp.com/" style="color:#fde68a">活动页</a> ·
+      <a href="https://gbn-timeline-e29a-dev.bbljsp.com/" style="color:#fde68a">时间线</a>
+      <br>打包时间：2026-07-08
+    </div>
+  </div>
+</body>
+</html>

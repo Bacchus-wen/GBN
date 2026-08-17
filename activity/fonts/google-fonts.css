@@ -1,0 +1,14 @@
+/* Offline fallback: system fonts approximating DM Sans + Newsreader */
+:root {
+  --font-sans: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --font-display: Georgia, "Times New Roman", "Songti SC", serif;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+.font-display,
+[class*="font-display"] {
+  font-family: var(--font-display);
+}
