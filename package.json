@@ -17,6 +17,7 @@
     "dev:web": "npm run dev --workspace=web",
     "dev:server": "npm run dev --workspace=server",
     "build": "npm run build --workspace=web",
+    "bake:world": "tsx tools/bake-world.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
