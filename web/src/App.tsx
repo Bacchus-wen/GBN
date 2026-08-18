@@ -111,12 +111,6 @@ export default function App() {
                     onClick={() => dispatch({ type: 'setLayer', layer: k })}
                   >{l}</button>
                 ))}
-                <button
-                  className="chip"
-                  aria-pressed={state.showDrafts}
-                  style={{ marginLeft: 'auto' }}
-                  onClick={() => dispatch({ type: 'toggleDrafts' })}
-                >✦ 显示 AI 草案</button>
               </div>
 
               <div className="legend">
@@ -135,8 +129,6 @@ export default function App() {
                     <b>{k}</b>
                   </span>
                 ))}
-                <span><b style={{ color: 'var(--coral)' }}>⚠ 红环</b> 争议格</span>
-                <span><b style={{ color: 'var(--violet)' }}>✦ 紫</b> AI 草案</span>
               </div>
             </section>
 

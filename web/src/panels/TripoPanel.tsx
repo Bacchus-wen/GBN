@@ -84,7 +84,7 @@ export function TripoPanel({ state, dispatch }: {
         author: role.user,
         edited: true,
         at: '刚刚',
-        payload: { cell: `${p.x.toFixed(1)},${p.z.toFixed(1)}`, text: modelUrl },
+        payload: { placement: p, text: modelUrl },
       },
     })
     setPhase('idle')

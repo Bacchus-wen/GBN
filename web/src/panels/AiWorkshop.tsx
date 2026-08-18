@@ -108,7 +108,7 @@ function DraftModal({ kind, state, dispatch, onClose }: {
         at: '刚刚',
         payload: {
           terrain: ai.terrain,
-          cell: needCell && p ? `${p.x.toFixed(1)},${p.z.toFixed(1)}` : undefined,
+          placement: needCell && p ? p : undefined,
           text: trimmed,
         },
       },

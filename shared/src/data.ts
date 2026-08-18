@@ -212,14 +212,26 @@ export const CONTESTED: Contested[] = [
     note: '无主走廊，两国同日提交认领申请。' },
 ]
 
-// 地标：玩家或 AI 产出，落在具体格子上
+// 种子地标沿用 ASCII 图的 (col, row) 编号，换算成世界坐标落在地形烘焙的同一坐标系里。
+// 换算尺寸需与 tools/bake-world.ts 的 SIZE_X/SIZE_Z 保持一致；y/法线在此仅取平地默认值，
+// 因为烘焙产物（真实高度场）在离线阶段之外，authoring 时不可得。
+const SEED_WORLD_SIZE_X = 400
+const SEED_WORLD_SIZE_Z = 250
+
+function cellToPlacement(col: number, row: number): Landmark['placement'] {
+  const x = (col / (MAP_W - 1)) * SEED_WORLD_SIZE_X - SEED_WORLD_SIZE_X / 2
+  const z = (row / (MAP_H - 1)) * SEED_WORLD_SIZE_Z - SEED_WORLD_SIZE_Z / 2
+  return { x, y: 0, z, nx: 0, ny: 1, nz: 0 }
+}
+
+// 地标：玩家或 AI 产出，落在世界地形的具体坐标上
 export const LANDMARKS: Landmark[] = [
-  { col: 11, row: 4, nationId: 'benchylvania', name: '主权港口大门', author: 'ItzMpower', origin: 'human', status: 'approved' },
-  { col: 3, row: 4, nationId: 'print-republic', name: '共和国参议院穹顶', author: 'GabeTechInd', origin: 'human', status: 'approved' },
-  { col: 9, row: 8, nationId: 'benchyland', name: '岛屿吉祥物纪念碑', author: 'blufufuf3D', origin: 'human', status: 'approved' },
-  { col: 3, row: 8, nationId: 'carabbenchia', name: '蟹钳码头起重机', author: 'CrabWorks', origin: 'human', status: 'approved' },
-  { col: 5, row: 1, nationId: 'north-bench', name: '破冰船坞', author: 'FrostHull', origin: 'human', status: 'approved' },
-  { col: 14, row: 4, nationId: 'allabenchia', name: '巫师灯塔', author: 'WizardLayer', origin: 'ai', status: 'pending' },
+  { placement: cellToPlacement(11, 4), nationId: 'benchylvania', name: '主权港口大门', author: 'ItzMpower', origin: 'human', status: 'approved' },
+  { placement: cellToPlacement(3, 4), nationId: 'print-republic', name: '共和国参议院穹顶', author: 'GabeTechInd', origin: 'human', status: 'approved' },
+  { placement: cellToPlacement(9, 8), nationId: 'benchyland', name: '岛屿吉祥物纪念碑', author: 'blufufuf3D', origin: 'human', status: 'approved' },
+  { placement: cellToPlacement(3, 8), nationId: 'carabbenchia', name: '蟹钳码头起重机', author: 'CrabWorks', origin: 'human', status: 'approved' },
+  { placement: cellToPlacement(5, 1), nationId: 'north-bench', name: '破冰船坞', author: 'FrostHull', origin: 'human', status: 'approved' },
+  { placement: cellToPlacement(14, 4), nationId: 'allabenchia', name: '巫师灯塔', author: 'WizardLayer', origin: 'ai', status: 'pending' },
 ]
 
 // 三级角色。demo 可切换。

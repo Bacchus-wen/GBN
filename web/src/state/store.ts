@@ -12,7 +12,6 @@ export interface AppState {
   selectedPlacement: Placement | null
   layer: LayerKey
   view: ViewMode
-  showDrafts: boolean
   queue: QueueItem[]
   landmarks: Landmark[]
   /** AI 候选池游标，保证 demo 可复现 */
@@ -45,7 +44,6 @@ export const initialState: AppState = {
   selectedPlacement: null,
   layer: 'owner',
   view: 'board',
-  showDrafts: true,
   queue: [{
     id: 'q-seed', kind: 'landmark', scope: 'domestic', origin: 'ai',
     nationId: 'allabenchia', title: '巫师灯塔',
@@ -66,7 +64,6 @@ export type Action =
   | { type: 'pickPlacement'; placement: Placement }
   | { type: 'setLayer'; layer: LayerKey }
   | { type: 'setView'; view: ViewMode }
-  | { type: 'toggleDrafts' }
   | { type: 'submitQueue'; item: QueueItem }
   | { type: 'decide'; id: string; approve: boolean }
   | { type: 'advanceAi'; kind: DraftKind }
@@ -90,9 +87,6 @@ export function reducer(s: AppState, a: Action): AppState {
     case 'setView':
       return { ...s, view: a.view }
 
-    case 'toggleDrafts':
-      return { ...s, showDrafts: !s.showDrafts }
-
     case 'submitQueue':
       return {
         ...s,
@@ -115,10 +109,9 @@ export function reducer(s: AppState, a: Action): AppState {
           )
           if (seeded) {
             landmarks = s.landmarks.map(l => l === seeded ? { ...l, status: 'approved' } : l)
-          } else if (item.payload?.cell) {
-            const [c, r] = item.payload.cell.split(',').map(Number)
+          } else if (item.payload?.placement) {
             landmarks = [...s.landmarks, {
-              col: c, row: r, nationId: item.nationId,
+              placement: item.payload.placement, nationId: item.nationId,
               name: item.title, author: item.author ?? '—',
               origin: item.origin, status: 'approved',
               modelUrl: item.payload.text,

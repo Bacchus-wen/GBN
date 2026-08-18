@@ -1,5 +1,7 @@
 // GBN 领域类型。形状取自 activity-v2/data.js 的 mock 数据，保持一致以便直接迁移。
 
+import type { Placement } from './world/placement.js'
+
 /** 地形键。对应 TERRAIN_MAP 里的字符。 */
 export type TerrainKey = 'p' | 'f' | 'm' | 'c' | 'i' | 'r' | 'v' | 'd'
 
@@ -79,8 +81,8 @@ export interface Contested {
 export type Origin = 'human' | 'ai'
 
 export interface Landmark {
-  col: number
-  row: number
+  /** 世界坐标落点（x/y/z + 法线），来自 placementAt 的拾取结果，而非六角格 col/row */
+  placement: Placement
   nationId: string
   name: string
   author: string
@@ -132,7 +134,8 @@ export interface QueueItem {
   at?: string
   payload?: {
     terrain?: TerrainKey
-    cell?: string
+    /** 地形上的落点：世界坐标 x/y/z + 法线，取自 placementAt 的拾取结果 */
+    placement?: Placement
     text?: string
     cells?: string[]
   }
