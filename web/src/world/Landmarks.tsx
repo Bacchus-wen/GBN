@@ -6,9 +6,11 @@
 
 import { placementAt } from '@gbn/shared/world'
 import { nationById } from '@gbn/shared'
-import { useMemo } from 'react'
+import { useGLTF } from '@react-three/drei'
+import { Suspense, useMemo } from 'react'
 import * as THREE from 'three'
-import type { Landmark } from '@gbn/shared'
+import { alignToNormal, normalizeToHeight } from './placement'
+import type { Landmark, Placement } from '@gbn/shared'
 import type { LoadedWorld } from './loadWorld'
 
 interface Props {
@@ -24,6 +26,32 @@ interface Props {
  */
 const PYLON_H = 18
 
+/** 生成模型在世界里的目标高度。与程序化塔身同量级，避免大小失控 */
+const MODEL_H = 16
+
+/**
+ * GLB 地标。生成模型的尺寸与原点约定各不相同，必须先归一化再落位。
+ *
+ * useGLTF 会缓存并复用同一个 scene 实例，而 normalizeToHeight 会永久改写
+ * 子节点的 position——不 clone 就会把缓存里的模板改坏，第二个实例开始全错。
+ */
+function GlbMarker({ url, p }: { url: string; p: Placement }) {
+  const gltf = useGLTF(url)
+
+  const object = useMemo(() => {
+    const obj = gltf.scene.clone(true)
+    obj.traverse(o => {
+      const m = o as THREE.Mesh
+      if (m.isMesh) { m.castShadow = true; m.receiveShadow = true }
+    })
+    normalizeToHeight(obj, MODEL_H)
+    alignToNormal(obj, p)
+    return obj
+  }, [gltf, p])
+
+  return <primitive object={object} />
+}
+
 function Marker({ world, l, onSelect }: { world: LoadedWorld; l: Landmark; onSelect?: (l: Landmark) => void }) {
   const nation = nationById(l.nationId)
   const color = nation?.color ?? '#9aa4b2'
@@ -35,10 +63,33 @@ function Marker({ world, l, onSelect }: { world: LoadedWorld; l: Landmark; onSel
     [world, l.placement.x, l.placement.z],
   )
 
+  // 有生成模型就用模型，没有就用程序化占位。
+  // 模型加载中由 Suspense 兜底为占位塔身，不让世界出现空洞。
+  if (l.modelUrl) {
+    return (
+      <group onClick={e => { e.stopPropagation(); onSelect?.(l) }}>
+        <Suspense fallback={<Pylon p={p} color={color} pending />}>
+          <GlbMarker url={l.modelUrl} p={p} />
+        </Suspense>
+        <mesh position={[p.x, p.y + 0.4, p.z]} rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[4.4, 6.2, 18]} />
+          <meshBasicMaterial color={color} transparent opacity={0.7} side={THREE.DoubleSide} />
+        </mesh>
+      </group>
+    )
+  }
+
+  return <Pylon p={p} color={color} pending={pending} onClick={() => onSelect?.(l)} />
+}
+
+/** 程序化占位地标 */
+function Pylon({
+  p, color, pending, onClick,
+}: { p: Placement; color: string; pending: boolean; onClick?: () => void }) {
   return (
     <group
       position={[p.x, p.y, p.z]}
-      onClick={e => { e.stopPropagation(); onSelect?.(l) }}
+      onClick={e => { e.stopPropagation(); onClick?.() }}
     >
       {/* 塔身用骨白色而不是国家色：归属层的地面本身就是国家色，
           同色塔身等于隐形。国家身份交给顶部宝石和基座环去表达。 */}

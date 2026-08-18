@@ -1,5 +1,6 @@
 // GBN 服务端。目前只做 Tripo 代理 —— API Key 留在这一侧，前端不接触。
 import { serve } from '@hono/node-server'
+import { ingest, readAsset } from './assets.js'
 import { installProxy } from './proxy.js'
 import { Hono, type Context } from 'hono'
 import { cors } from 'hono/cors'
@@ -46,6 +47,33 @@ app.post('/api/tripo/texture', async c => {
     }
     const ref = await createTexture({ prompt: body.prompt, seedKey: body.seedKey })
     return c.json({ ok: true, data: ref })
+  } catch (e) {
+    return fail(c, e)
+  }
+})
+
+/**
+ * 把远端资产下载入库，返回稳定的本地地址。
+ * Tripo 的模型 URL 带签名且约 24 小时过期，不入库第二天就会集体 404。
+ */
+app.post('/api/assets/ingest', async c => {
+  try {
+    const body = await c.req.json<{ url?: string; key?: string }>()
+    if (!body.url?.trim()) return c.json({ ok: false, error: 'url 不能为空' }, 400)
+    return c.json({ ok: true, data: await ingest(body.url, body.key) })
+  } catch (e) {
+    return fail(c, e)
+  }
+})
+
+/** 读回已入库的资产 */
+app.get('/api/assets/:id', async c => {
+  try {
+    const { body, type } = await readAsset(c.req.param('id'))
+    return c.body(body, 200, {
+      'Content-Type': type,
+      'Cache-Control': 'public, max-age=31536000, immutable',
+    })
   } catch (e) {
     return fail(c, e)
   }
