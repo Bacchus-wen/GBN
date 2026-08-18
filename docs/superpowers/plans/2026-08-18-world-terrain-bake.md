@@ -12,7 +12,8 @@
 
 - 所有新纯函数模块放在 `shared/src/world/`，**不得 import three.js 或任何浏览器 API**（要在 node 下测）
 - 一切随机必须走显式种子；同种子同参数必须逐元素一致
-- 世界分辨率：高度场与掩膜 `res = 512`，渲染网格 `meshRes = 256`，世界尺寸 `size = 400`（three.js 单位）
+- 世界分辨率：高度场与掩膜 `res = 512`（正方形采样），渲染网格 `meshRes = 256`
+- 世界范围为**矩形**：`sizeX = 400`、`sizeZ = 250`（three.js 单位，1.6:1，与 16×10 的 ASCII 图长宽比一致）。掩膜按正方形采样，世界范围按矩形映射，二者不可混用同一个标量
 - 二进制资产格式：高度图 `Uint16` 量化、区域图 `Uint8` 索引，元数据走 `world-spec.json`，**不引入 PNG 编解码依赖**
 - 测试文件与源码同目录，命名 `*.test.ts`，用根目录 `npx vitest run` 执行
 - 提交信息用中文，遵循 `feat:` / `test:` / `refactor:` 前缀
@@ -581,8 +582,8 @@ git commit -m "feat: ASCII 图升采样为归一化区域掩膜"
   - `interface OpSpec { kind: GeomorphKind; weight: number; freq?: number; angle?: number; steps?: number; k?: number }`
   - `interface TerrainProfile { base: number; noise: NoiseLayer[]; ops: OpSpec[] }`
   - `TERRAIN_PROFILES: Record<string, TerrainProfile>`
-  - `interface Heightfield { res: number; size: number; data: Float32Array; min: number; max: number }`
-  - `buildHeightfield(masks: RegionMasks, profiles: Record<string, TerrainProfile>, seed: number, size: number): Heightfield`
+  - `interface Heightfield { res: number; sizeX: number; sizeZ: number; data: Float32Array; min: number; max: number }`
+  - `buildHeightfield(masks: RegionMasks, profiles: Record<string, TerrainProfile>, seed: number, sizeX: number, sizeZ: number): Heightfield`
   - `sampleHeight(hf: Heightfield, x: number, z: number): number`
   - `sampleHeightOnMesh(hf: Heightfield, x: number, z: number, meshRes: number): number`
 
@@ -607,7 +608,7 @@ const ROWS = [
 ]
 
 const build = (seed: number) =>
-  buildHeightfield(buildMasks(ROWS, 64, 3), TERRAIN_PROFILES, seed, 400)
+  buildHeightfield(buildMasks(ROWS, 64, 3), TERRAIN_PROFILES, seed, 400, 250)
 
 describe('buildHeightfield', () => {
   it('同种子逐元素一致', () => {
@@ -651,12 +652,13 @@ describe('buildHeightfield', () => {
 describe('采样', () => {
   it('格点处采样等于数组值', () => {
     const hf = build(9)
-    const half = hf.size / 2
-    const cell = hf.size / (hf.res - 1)
+    const cellX = hf.sizeX / (hf.res - 1)
+    const cellZ = hf.sizeZ / (hf.res - 1)
     const ix = 17
     const iy = 23
-    expect(sampleHeight(hf, -half + ix * cell, -half + iy * cell))
-      .toBeCloseTo(hf.data[iy * hf.res + ix], 5)
+    const x = -hf.sizeX / 2 + ix * cellX
+    const z = -hf.sizeZ / 2 + iy * cellZ
+    expect(sampleHeight(hf, x, z)).toBeCloseTo(hf.data[iy * hf.res + ix], 5)
   })
 
   it('越界坐标被夹取，不产生 NaN', () => {
@@ -668,12 +670,12 @@ describe('采样', () => {
   it('放置正确性：解析采样与网格三角插值之差小于格宽的 1%', () => {
     const hf = build(31)
     const meshRes = 256
-    const cell = hf.size / (meshRes - 1)
-    const tol = cell * 0.01
-    const half = hf.size / 2
+    const cellX = hf.sizeX / (meshRes - 1)
+    const cellZ = hf.sizeZ / (meshRes - 1)
+    const tol = Math.max(cellX, cellZ) * 0.01
     for (let i = 0; i < 50; i++) {
-      const x = -half + ((i * 7.3) % hf.size)
-      const z = -half + ((i * 11.7) % hf.size)
+      const x = -hf.sizeX / 2 + ((i * 7.3) % hf.sizeX)
+      const z = -hf.sizeZ / 2 + ((i * 11.7) % hf.sizeZ)
       expect(Math.abs(sampleHeight(hf, x, z) - sampleHeightOnMesh(hf, x, z, meshRes)))
         .toBeLessThan(tol)
     }
@@ -751,7 +753,8 @@ export const TERRAIN_PROFILES: Record<string, TerrainProfile> = {
 ```ts
 // 论文 Eq.6 的高度场合成：
 //   H(x) = Σ_r m_r(x) · [ h_r + Σ_k w_{r,k} N_{r,k}(x) + Σ_j λ_{r,j} G_{r,j}(x) ]
-// 世界坐标以原点为中心，x/z ∈ [-size/2, size/2]。
+// 世界坐标以原点为中心，x ∈ [-sizeX/2, sizeX/2]，z ∈ [-sizeZ/2, sizeZ/2]。
+// 掩膜是正方形采样，世界范围是矩形，两者通过归一化坐标 u/v 对应。
 
 import { dune, erode, ridge, terrace } from './geomorph.js'
 import { fbm, makeValueNoise2D } from './noise.js'
@@ -766,8 +769,10 @@ export type { TerrainProfile }
 
 export interface Heightfield {
   res: number
-  /** 世界尺寸（three.js 单位），正方形边长 */
-  size: number
+  /** 世界 X 方向范围（three.js 单位） */
+  sizeX: number
+  /** 世界 Z 方向范围（three.js 单位） */
+  sizeZ: number
   data: Float32Array
   min: number
   max: number
@@ -777,7 +782,8 @@ export function buildHeightfield(
   masks: RegionMasks,
   profiles: Record<string, TerrainProfile>,
   seed: number,
-  size: number,
+  sizeX: number,
+  sizeZ: number,
 ): Heightfield {
   const res = masks.res
   const noise = makeValueNoise2D(mulberry32(seed))
@@ -827,7 +833,7 @@ export function buildHeightfield(
     }
   }
 
-  return { res, size, data, min, max }
+  return { res, sizeX, sizeZ, data, min, max }
 }
 ```
 
@@ -838,9 +844,8 @@ export function buildHeightfield(
 ```ts
 /** 世界坐标 → 场索引（浮点），越界夹取 */
 function toGrid(hf: Heightfield, x: number, z: number): [number, number] {
-  const half = hf.size / 2
-  const gx = ((x + half) / hf.size) * (hf.res - 1)
-  const gz = ((z + half) / hf.size) * (hf.res - 1)
+  const gx = ((x + hf.sizeX / 2) / hf.sizeX) * (hf.res - 1)
+  const gz = ((z + hf.sizeZ / 2) / hf.sizeZ) * (hf.res - 1)
   return [
     Math.min(hf.res - 1, Math.max(0, gx)),
     Math.min(hf.res - 1, Math.max(0, gz)),
@@ -875,15 +880,17 @@ export function sampleHeightOnMesh(
   z: number,
   meshRes: number,
 ): number {
-  const half = hf.size / 2
-  const cell = hf.size / (meshRes - 1)
-  const cx = Math.min(meshRes - 2, Math.max(0, Math.floor((x + half) / cell)))
-  const cz = Math.min(meshRes - 2, Math.max(0, Math.floor((z + half) / cell)))
-  const fx = Math.min(1, Math.max(0, (x + half) / cell - cx))
-  const fz = Math.min(1, Math.max(0, (z + half) / cell - cz))
+  const halfX = hf.sizeX / 2
+  const halfZ = hf.sizeZ / 2
+  const cellX = hf.sizeX / (meshRes - 1)
+  const cellZ = hf.sizeZ / (meshRes - 1)
+  const cx = Math.min(meshRes - 2, Math.max(0, Math.floor((x + halfX) / cellX)))
+  const cz = Math.min(meshRes - 2, Math.max(0, Math.floor((z + halfZ) / cellZ)))
+  const fx = Math.min(1, Math.max(0, (x + halfX) / cellX - cx))
+  const fz = Math.min(1, Math.max(0, (z + halfZ) / cellZ - cz))
 
   const at = (i: number, j: number) =>
-    sampleHeight(hf, -half + i * cell, -half + j * cell)
+    sampleHeight(hf, -halfX + i * cellX, -halfZ + j * cellZ)
 
   const h00 = at(cx, cz)
   const h10 = at(cx + 1, cz)
@@ -927,7 +934,7 @@ git commit -m "feat: Eq.6 高度场合成与双线性/三角插值采样"
 **Interfaces:**
 - Consumes: Task 3 的 `RegionMasks` / `dominantRegion`，Task 4 的 `Heightfield` / `buildHeightfield` / `TERRAIN_PROFILES`
 - Produces:
-  - `interface WorldSpec { res: number; meshRes: number; size: number; seed: number; min: number; max: number; regions: string[]; owners: string[] }`
+  - `interface WorldSpec { res: number; meshRes: number; sizeX: number; sizeZ: number; seed: number; min: number; max: number; regions: string[]; owners: string[] }`
   - `encodeHeights(hf: Heightfield): Uint16Array`
   - `decodeHeights(buf: Uint16Array, min: number, max: number): Float32Array`
   - `encodeRegions(masks: RegionMasks): Uint8Array`
@@ -945,7 +952,7 @@ import { decodeHeights, encodeHeights, encodeRegions } from './codec.js'
 
 const ROWS = ['ppmm', 'ppmm', 'ccii', 'ccii']
 const masks = buildMasks(ROWS, 32, 2)
-const hf = buildHeightfield(masks, TERRAIN_PROFILES, 42, 400)
+const hf = buildHeightfield(masks, TERRAIN_PROFILES, 42, 400, 250)
 
 describe('高度图量化', () => {
   it('往返误差不超过量化步长', () => {
@@ -994,7 +1001,8 @@ import type { Heightfield } from './heightfield.js'
 export interface WorldSpec {
   res: number
   meshRes: number
-  size: number
+  sizeX: number
+  sizeZ: number
   seed: number
   min: number
   max: number
@@ -1065,7 +1073,8 @@ import type { WorldSpec } from '../shared/src/world/index.js'
 
 const RES = 512
 const MESH_RES = 256
-const SIZE = 400
+const SIZE_X = 400
+const SIZE_Z = 250
 const SOFTNESS = 6
 const SEED = 20260818
 
@@ -1074,12 +1083,13 @@ const outDir = resolve(root, 'web/public/world')
 
 const terrainMasks = buildMasks(TERRAIN_MAP, RES, SOFTNESS)
 const ownerMasks = buildMasks(OWNER_MAP, RES, SOFTNESS)
-const hf = buildHeightfield(terrainMasks, TERRAIN_PROFILES, SEED, SIZE)
+const hf = buildHeightfield(terrainMasks, TERRAIN_PROFILES, SEED, SIZE_X, SIZE_Z)
 
 const spec: WorldSpec = {
   res: RES,
   meshRes: MESH_RES,
-  size: SIZE,
+  sizeX: SIZE_X,
+  sizeZ: SIZE_Z,
   seed: SEED,
   min: hf.min,
   max: hf.max,
@@ -1094,7 +1104,7 @@ writeFileSync(resolve(outDir, 'owners.bin'), Buffer.from(encodeRegions(ownerMask
 writeFileSync(resolve(outDir, 'world-spec.json'), JSON.stringify(spec, null, 2))
 
 console.log(`烘焙完成 -> ${outDir}`)
-console.log(`  分辨率 ${RES}  高度 ${hf.min.toFixed(2)} ~ ${hf.max.toFixed(2)}`)
+console.log(`  采样 ${RES}  世界 ${SIZE_X}x${SIZE_Z}  高度 ${hf.min.toFixed(2)} ~ ${hf.max.toFixed(2)}`)
 console.log(`  地形区 ${terrainMasks.keys.join('')}  归属区 ${ownerMasks.keys.join('')}`)
 ```
 
@@ -1186,7 +1196,12 @@ export async function loadWorld(baseUrl = '/world'): Promise<LoadedWorld> {
 
   const heights = decodeHeights(new Uint16Array(hBuf), spec.min, spec.max)
   const hf: Heightfield = {
-    res: spec.res, size: spec.size, data: heights, min: spec.min, max: spec.max,
+    res: spec.res,
+    sizeX: spec.sizeX,
+    sizeZ: spec.sizeZ,
+    data: heights,
+    min: spec.min,
+    max: spec.max,
   }
 
   return { spec, heights, regions: new Uint8Array(rBuf), owners: new Uint8Array(oBuf), hf }
@@ -1214,8 +1229,8 @@ interface Props {
 
 export function TerrainMesh({ world, onPick }: Props) {
   const geometry = useMemo(() => {
-    const { size, meshRes } = world.spec
-    const geo = new THREE.PlaneGeometry(size, size, meshRes - 1, meshRes - 1)
+    const { sizeX, sizeZ, meshRes } = world.spec
+    const geo = new THREE.PlaneGeometry(sizeX, sizeZ, meshRes - 1, meshRes - 1)
     geo.rotateX(-Math.PI / 2)   // 平面转到 xz 面，y 作高度
     const pos = geo.attributes.position as THREE.BufferAttribute
     for (let i = 0; i < pos.count; i++) {
@@ -1262,16 +1277,17 @@ interface Props {
 }
 
 export function WorldCanvas({ world, onPick }: Props) {
-  const { size } = world.spec
+  const { sizeX, sizeZ } = world.spec
+  const span = Math.max(sizeX, sizeZ)
   return (
     <Canvas
       shadows
-      camera={{ position: [size * 0.6, size * 0.5, size * 0.6], fov: 45, far: size * 5 }}
+      camera={{ position: [span * 0.6, span * 0.5, span * 0.6], fov: 45, far: span * 5 }}
       style={{ width: '100%', height: '100%' }}
     >
       <color attach="background" args={['#0b1a2b']} />
       <hemisphereLight args={['#cfe6ff', '#22303d', 0.7]} />
-      <directionalLight position={[size * 0.4, size * 0.8, size * 0.3]} intensity={1.4} castShadow />
+      <directionalLight position={[span * 0.4, span * 0.8, span * 0.3]} intensity={1.4} castShadow />
       <TerrainMesh world={world} onPick={onPick} />
       <OrbitControls makeDefault enableDamping target={[0, 0, 0]} />
     </Canvas>
@@ -1344,7 +1360,7 @@ import { placementAt } from './placement.js'
 
 const hf = buildHeightfield(
   buildMasks(['ppmm', 'ppmm', 'ccii', 'ccii'], 64, 3),
-  TERRAIN_PROFILES, 2026, 400,
+  TERRAIN_PROFILES, 2026, 400, 250,
 )
 
 describe('placementAt', () => {
@@ -1398,12 +1414,13 @@ export interface Placement {
 }
 
 export function placementAt(hf: Heightfield, x: number, z: number): Placement {
-  const eps = hf.size / (hf.res - 1)
+  const epsX = hf.sizeX / (hf.res - 1)
+  const epsZ = hf.sizeZ / (hf.res - 1)
   const y = sampleHeight(hf, x, z)
 
   // 中心差分求梯度，法线 = normalize(-dh/dx, 1, -dh/dz)
-  const dhdx = (sampleHeight(hf, x + eps, z) - sampleHeight(hf, x - eps, z)) / (2 * eps)
-  const dhdz = (sampleHeight(hf, x, z + eps) - sampleHeight(hf, x, z - eps)) / (2 * eps)
+  const dhdx = (sampleHeight(hf, x + epsX, z) - sampleHeight(hf, x - epsX, z)) / (2 * epsX)
+  const dhdz = (sampleHeight(hf, x, z + epsZ) - sampleHeight(hf, x, z - epsZ)) / (2 * epsZ)
   const len = Math.hypot(-dhdx, 1, -dhdz)
 
   return { x, y, z, nx: -dhdx / len, ny: 1 / len, nz: -dhdz / len }
