@@ -1,4 +1,4 @@
-import { NATIONS, RESOURCE_COLOR, RESOURCE_ORDER, ROLES, TERRAIN } from '@gbn/shared'
+import { NATIONS, RESOURCE_COLOR, RESOURCE_ORDER, ROLES, TERRAIN, nationByGlyph } from '@gbn/shared'
 import { placementAt } from '@gbn/shared/world'
 import { useEffect, useReducer, useState } from 'react'
 import { AiWorkshop } from './panels/AiWorkshop'
@@ -91,10 +91,16 @@ export default function App() {
                   ? (
                     <WorldCanvas
                       world={world}
-                      onPick={pt => dispatch({
-                        type: 'pickPlacement',
-                        placement: placementAt(world.hf, pt.x, pt.z, world.spec.meshRes),
-                      })}
+                      layer={state.layer}
+                      onPick={(pt, _n, glyph) => {
+                        dispatch({
+                          type: 'pickPlacement',
+                          placement: placementAt(world.hf, pt.x, pt.z, world.spec.meshRes),
+                        })
+                        // 点到某国领土就顺带选中它，恢复「点地图看国家」这条交互
+                        const n = nationByGlyph(glyph)
+                        if (n) dispatch({ type: 'selectNation', id: n.id })
+                      }}
                     />
                     )
                   : <div className="s10 tm" style={{ padding: 24 }}>加载世界…</div>}

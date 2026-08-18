@@ -5,11 +5,13 @@ import { Canvas, useThree } from '@react-three/fiber'
 import { useEffect } from 'react'
 import * as THREE from 'three'
 import { TerrainMesh } from './TerrainMesh'
+import type { LayerKey } from '../state/types'
 import type { LoadedWorld } from './loadWorld'
 
 interface Props {
   world: LoadedWorld
-  onPick?: (point: THREE.Vector3, normal: THREE.Vector3) => void
+  layer: LayerKey
+  onPick?: (point: THREE.Vector3, normal: THREE.Vector3, ownerGlyph: string) => void
 }
 
 /** 观察方向（三四分之一俯视），归一化后乘取景距离得到相机位置 */
@@ -94,7 +96,7 @@ function SeaPlane({ world }: { world: LoadedWorld }) {
   )
 }
 
-export function WorldCanvas({ world, onPick }: Props) {
+export function WorldCanvas({ world, layer, onPick }: Props) {
   const { sizeX, sizeZ, max } = world.spec
   const span = Math.max(sizeX, sizeZ)
   return (
@@ -107,7 +109,7 @@ export function WorldCanvas({ world, onPick }: Props) {
         castShadow
       />
       <SeaPlane world={world} />
-      <TerrainMesh world={world} onPick={onPick} />
+      <TerrainMesh world={world} layer={layer} onPick={onPick} />
       <OrbitControls makeDefault enableDamping />
       <FitCamera world={world} />
     </Canvas>

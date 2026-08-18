@@ -1,18 +1,23 @@
-// 地形网格：PlaneGeometry 按高度场位移。网格分辨率低于高度场分辨率，
-// 位移用 sampleHeight 取值，与 shared 的解析采样保持一致。
+// 地形网格：PlaneGeometry 按高度场位移，顶点色由当前图层决定。
+// 网格分辨率低于高度场分辨率，位移用 sampleHeight 取值，与 shared 的解析采样保持一致。
 
-import { sampleHeight } from '@gbn/shared/world'
+import { sampleHeight, sampleIndex } from '@gbn/shared/world'
 import { useMemo } from 'react'
 import * as THREE from 'three'
 import type { ThreeEvent } from '@react-three/fiber'
+import { buildVertexColors } from './palette'
+import type { LayerKey } from '../state/types'
 import type { LoadedWorld } from './loadWorld'
 
 interface Props {
   world: LoadedWorld
-  onPick?: (point: THREE.Vector3, normal: THREE.Vector3) => void
+  layer: LayerKey
+  /** 点击地形。ownerGlyph 是落点所属的归属层字符（'.' 海洋、'*' 无主） */
+  onPick?: (point: THREE.Vector3, normal: THREE.Vector3, ownerGlyph: string) => void
 }
 
-export function TerrainMesh({ world, onPick }: Props) {
+export function TerrainMesh({ world, layer, onPick }: Props) {
+  // 几何只依赖世界数据，切图层时不必重建
   const geometry = useMemo(() => {
     const { sizeX, sizeZ, meshRes } = world.spec
     const geo = new THREE.PlaneGeometry(sizeX, sizeZ, meshRes - 1, meshRes - 1)
@@ -26,18 +31,29 @@ export function TerrainMesh({ world, onPick }: Props) {
     return geo
   }, [world])
 
+  // 顶点色随图层变化
+  useMemo(() => {
+    const colors = buildVertexColors(world, layer, geometry.attributes.position as THREE.BufferAttribute)
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+    return colors
+  }, [world, layer, geometry])
+
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     if (!onPick) return
     e.stopPropagation()
     const normal = e.face
       ? e.face.normal.clone().transformDirection(e.object.matrixWorld)
       : new THREE.Vector3(0, 1, 0)
-    onPick(e.point.clone(), normal)
+    const { spec, owners } = world
+    const glyph = spec.owners[
+      sampleIndex({ data: owners, res: spec.res, sizeX: spec.sizeX, sizeZ: spec.sizeZ }, e.point.x, e.point.z)
+    ] ?? '*'
+    onPick(e.point.clone(), normal, glyph)
   }
 
   return (
     <mesh geometry={geometry} onClick={handleClick} receiveShadow castShadow>
-      <meshStandardMaterial color="#5d7a8c" />
+      <meshStandardMaterial vertexColors roughness={0.92} metalness={0.02} />
     </mesh>
   )
 }
