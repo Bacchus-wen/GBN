@@ -1,5 +1,6 @@
 // GBN 服务端。目前只做 Tripo 代理 —— API Key 留在这一侧，前端不接触。
 import { serve } from '@hono/node-server'
+import { installProxy } from './proxy.js'
 import { Hono, type Context } from 'hono'
 import { cors } from 'hono/cors'
 import type { ContentfulStatusCode } from 'hono/utils/http-status'
@@ -67,5 +68,10 @@ function fail(c: Context, e: unknown) {
 }
 
 const port = Number(process.env.PORT ?? 8787)
-console.log(`GBN server → http://localhost:${port}  (Tripo key: ${hasKey() ? '已配置' : '缺失'})`)
+// 必须在任何 fetch 之前装好，否则出网请求不走代理
+const proxy = installProxy()
+
+console.log(`GBN server → http://localhost:${port}`)
+console.log(`  Tripo key: ${hasKey() ? '已配置' : '缺失'}`)
+console.log(`  出网代理: ${proxy ?? '未配置（直连）'}`)
 serve({ fetch: app.fetch, port })
