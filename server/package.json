@@ -1,0 +1,18 @@
+{
+  "name": "@gbn/server",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --use-env-proxy --env-file-if-exists=.env src/index.ts",
+    "start": "tsx --use-env-proxy --env-file-if-exists=.env src/index.ts"
+  },
+  "dependencies": {
+    "@gbn/shared": "*",
+    "@hono/node-server": "^1.19.17",
+    "hono": "^4.13.2"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0"
+  }
+}
