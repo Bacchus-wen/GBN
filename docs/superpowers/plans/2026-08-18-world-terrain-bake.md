@@ -667,17 +667,37 @@ describe('采样', () => {
     expect(Number.isFinite(sampleHeight(hf, 9999, 9999))).toBe(true)
   })
 
-  it('放置正确性：解析采样与网格三角插值之差小于格宽的 1%', () => {
+  it('网格顶点处两种采样完全一致', () => {
     const hf = build(31)
     const meshRes = 256
     const cellX = hf.sizeX / (meshRes - 1)
     const cellZ = hf.sizeZ / (meshRes - 1)
-    const tol = Math.max(cellX, cellZ) * 0.01
-    for (let i = 0; i < 50; i++) {
-      const x = -hf.sizeX / 2 + ((i * 7.3) % hf.sizeX)
-      const z = -hf.sizeZ / 2 + ((i * 11.7) % hf.sizeZ)
-      expect(Math.abs(sampleHeight(hf, x, z) - sampleHeightOnMesh(hf, x, z, meshRes)))
-        .toBeLessThan(tol)
+    for (const [i, j] of [[0, 0], [37, 91], [128, 128], [meshRes - 1, meshRes - 1]]) {
+      const x = -hf.sizeX / 2 + i * cellX
+      const z = -hf.sizeZ / 2 + j * cellZ
+      expect(sampleHeightOnMesh(hf, x, z, meshRes)).toBeCloseTo(sampleHeight(hf, x, z), 10)
+    }
+  })
+
+  it('网格插值结果落在所在单元四角高度的区间内', () => {
+    const hf = build(31)
+    const meshRes = 256
+    const cellX = hf.sizeX / (meshRes - 1)
+    const cellZ = hf.sizeZ / (meshRes - 1)
+    const at = (i: number, j: number) =>
+      sampleHeight(hf, -hf.sizeX / 2 + i * cellX, -hf.sizeZ / 2 + j * cellZ)
+    for (let k = 0; k < 50; k++) {
+      const cx = 3 + ((k * 7) % (meshRes - 5))
+      const cz = 3 + ((k * 11) % (meshRes - 5))
+      const corners = [at(cx, cz), at(cx + 1, cz), at(cx, cz + 1), at(cx + 1, cz + 1)]
+      const v = sampleHeightOnMesh(
+        hf,
+        -hf.sizeX / 2 + (cx + 0.5) * cellX,
+        -hf.sizeZ / 2 + (cz + 0.5) * cellZ,
+        meshRes,
+      )
+      expect(v).toBeGreaterThanOrEqual(Math.min(...corners) - 1e-6)
+      expect(v).toBeLessThanOrEqual(Math.max(...corners) + 1e-6)
     }
   })
 })
@@ -908,10 +928,12 @@ export function sampleHeightOnMesh(
 - [ ] **Step 6: 运行测试确认通过**
 
 Run: `npx vitest run shared/src/world/heightfield.test.ts`
-Expected: PASS，7 个用例全绿
+Expected: PASS，8 个用例全绿
 
-若「放置正确性」用例失败，说明高度场高频成分超出网格分辨率能表达的范围：把
-`TERRAIN_PROFILES` 里最高的 `freq`（`m` 的第二层噪声 `freq: 7`）下调到 5 后重跑。
+注意：不要试图让「解析采样」与「网格插值」在任意点上数值相等。`ridge` 与 `terrace`
+刻意制造锐利折线和阶跃，粗网格在几何上就无法在任意点复现它们——这是地貌的意义，不是缺陷。
+两者只在网格顶点处严格相等，单元内部则各自是合法插值。物体落点的一致性由 Task 7 保证：
+落点直接采用网格插值。
 
 - [ ] **Step 7: 提交**
 
