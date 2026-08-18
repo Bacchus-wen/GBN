@@ -55,6 +55,52 @@ describe('buildHeightfield', () => {
   })
 })
 
+describe('垂直夸张', () => {
+  it('verticalScale 线性缩放整个高度场', () => {
+    const a = buildHeightfield(buildMasks(ROWS, 64, 3), TERRAIN_PROFILES, 5, 400, 250)
+    const b = buildHeightfield(buildMasks(ROWS, 64, 3), TERRAIN_PROFILES, 5, 400, 250, 2.5)
+    for (let i = 0; i < a.data.length; i += 97) {
+      expect(b.data[i]).toBeCloseTo(a.data[i] * 2.5, 4)
+    }
+    expect(b.min).toBeCloseTo(a.min * 2.5, 4)
+    expect(b.max).toBeCloseTo(a.max * 2.5, 4)
+  })
+
+  it('省略时默认不缩放', () => {
+    const a = buildHeightfield(buildMasks(ROWS, 64, 3), TERRAIN_PROFILES, 5, 400, 250)
+    const b = buildHeightfield(buildMasks(ROWS, 64, 3), TERRAIN_PROFILES, 5, 400, 250, 1)
+    expect(Array.from(b.data)).toEqual(Array.from(a.data))
+  })
+})
+
+describe('各向同性', () => {
+  // 掩膜是正方形采样、世界是矩形，若噪声直接吃归一化的 u/v，同一个 freq 在 X 方向的
+  // 世界波长会是 Z 的 sizeX/sizeZ 倍，地表纹理被东西向拉长。修正前实测坡度比为
+  // 1.67~1.91；这里用多种子平均压掉单种子的采样方差（单种子散布约 ±0.15）。
+  const slopeRatio = (key: string, seed: number) => {
+    const rows = Array.from({ length: 6 }, () => key.repeat(8))
+    const hf = buildHeightfield(buildMasks(rows, 128, 3), TERRAIN_PROFILES, seed, 400, 250)
+    let sx = 0
+    let sz = 0
+    for (let i = 0; i < 4000; i++) {
+      const x = -150 + ((i * 7.3) % 300)
+      const z = -90 + ((i * 11.7) % 180)
+      sx += Math.abs(sampleHeight(hf, x + 1, z) - sampleHeight(hf, x - 1, z))
+      sz += Math.abs(sampleHeight(hf, x, z + 1) - sampleHeight(hf, x, z - 1))
+    }
+    return sz / sx
+  }
+
+  it.each(['p', 'f', 'm', 'i'])('%s 区的东西/南北坡度比接近 1', (key) => {
+    let sum = 0
+    const seeds = 8
+    for (let seed = 1; seed <= seeds; seed++) sum += slopeRatio(key, seed)
+    const mean = sum / seeds
+    expect(mean).toBeGreaterThan(0.88)
+    expect(mean).toBeLessThan(1.14)
+  })
+})
+
 describe('采样', () => {
   it('格点处采样等于数组值', () => {
     const hf = build(9)

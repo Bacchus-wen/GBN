@@ -45,6 +45,24 @@ describe('buildMasks', () => {
     expect(band(8)).toBeGreaterThan(band(2))
   })
 
+  it('两轴 σ 不同时过渡带宽度按轴分别变化', () => {
+    // 世界是矩形而掩膜是正方形采样，调用方需要按轴传不同 σ 才能得到
+    // 世界空间各向同性的过渡带。这里验证两个方向确实独立生效。
+    const band = (m: ReturnType<typeof buildMasks>, axis: 'x' | 'y') => {
+      const ai = m.keys.indexOf('a')
+      let count = 0
+      for (let i = 0; i < m.res; i++) {
+        const w = axis === 'x' ? maskAt(m, ai, i, 10) : maskAt(m, ai, 10, i)
+        if (w > 0.05 && w < 0.95) count++
+      }
+      return count
+    }
+    const wide = buildMasks(ROWS, 128, 10, 2)
+    expect(band(wide, 'x')).toBeGreaterThan(band(wide, 'y'))
+    const tall = buildMasks(ROWS, 128, 2, 10)
+    expect(band(tall, 'y')).toBeGreaterThan(band(tall, 'x'))
+  })
+
   it('dominantRegion 在区域内部返回该区', () => {
     const m = buildMasks(ROWS, 64, 2)
     expect(m.keys[dominantRegion(m, 4, 4)]).toBe('a')

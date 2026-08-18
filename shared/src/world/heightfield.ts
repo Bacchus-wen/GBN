@@ -2,6 +2,10 @@
 //   H(x) = Σ_r m_r(x) · [ h_r + Σ_k w_{r,k} N_{r,k}(x) + Σ_j λ_{r,j} G_{r,j}(x) ]
 // 世界坐标以原点为中心，x ∈ [-sizeX/2, sizeX/2]，z ∈ [-sizeZ/2, sizeZ/2]。
 // 掩膜是正方形采样，世界范围是矩形，两者通过归一化坐标 u/v 对应。
+//
+// verticalScale 是显式的垂直夸张系数。profiles 里的 base 沿用 data.ts 的 TERRAIN.height
+// （也是界面图例上显示的数字），但那点起伏铺在数百单位宽的地面上几乎看不出来。
+// 与其偷偷调高基准高程让图例说谎，不如把夸张作为一个具名参数留在烘焙侧。
 
 import { dune, erode, ridge, terrace } from './geomorph.js'
 import { fbm, makeValueNoise2D } from './noise.js'
@@ -31,6 +35,7 @@ export function buildHeightfield(
   seed: number,
   sizeX: number,
   sizeZ: number,
+  verticalScale = 1,
 ): Heightfield {
   const res = masks.res
   const noise = makeValueNoise2D(mulberry32(seed))
@@ -38,11 +43,21 @@ export function buildHeightfield(
   let min = Infinity
   let max = -Infinity
 
+  // 噪声域坐标必须各向同性：掩膜是正方形采样，世界是矩形，直接用归一化的
+  // u/v 会让同一个 freq 在 X 方向的世界波长是 Z 的 sizeX/sizeZ 倍，地表纹理被拉长。
+  // 用几何平均作参考长度，使两个方向的世界波长都等于 ref/freq，且整体尺度感与
+  // 修正前接近（介于原来的 sizeX/freq 与 sizeZ/freq 之间）。
+  const ref = Math.sqrt(sizeX * sizeZ)
+  const spanU = sizeX / ref
+  const spanV = sizeZ / ref
+
   for (let iy = 0; iy < res; iy++) {
     for (let ix = 0; ix < res; ix++) {
-      // 归一化场坐标，乘 freq 得噪声域坐标
+      // u/v 用于掩膜索引对应的归一化位置，nu/nv 是各向同性的噪声域坐标
       const u = ix / (res - 1)
       const v = iy / (res - 1)
+      const nu = u * spanU
+      const nv = v * spanV
       let h = 0
 
       for (let r = 0; r < masks.keys.length; r++) {
@@ -52,10 +67,10 @@ export function buildHeightfield(
 
         let local = p.base
         for (const layer of p.noise) {
-          local += layer.amp * fbm(noise, u * layer.freq, v * layer.freq, 4, 2, 0.5)
+          local += layer.amp * fbm(noise, nu * layer.freq, nv * layer.freq, 4, 2, 0.5)
         }
         for (const op of p.ops) {
-          const n = fbm(noise, u * (op.freq ?? 4), v * (op.freq ?? 4), 3, 2, 0.5)
+          const n = fbm(noise, nu * (op.freq ?? 4), nv * (op.freq ?? 4), 3, 2, 0.5)
           switch (op.kind) {
             case 'ridge':
               local += op.weight * ridge(n)
@@ -64,7 +79,7 @@ export function buildHeightfield(
               local += op.weight * terrace((n + 1) / 2, op.steps ?? 4)
               break
             case 'dune':
-              local += op.weight * dune(u, v, op.angle ?? 0, op.freq ?? 10)
+              local += op.weight * dune(nu, nv, op.angle ?? 0, op.freq ?? 10)
               break
             case 'erode':
               local = erode(local, Math.abs(n), op.k ?? 0.3)
@@ -74,7 +89,7 @@ export function buildHeightfield(
         h += w * local
       }
 
-      data[iy * res + ix] = h
+      data[iy * res + ix] = h * verticalScale
       // min/max 记录 Float32Array 实际存入后的量化值，避免与 h 的双精度值产生
       // 超出 toBeCloseTo 精度的舍入差（该量级下 float32 舍入误差 ~1e-6）。
       const stored = data[iy * res + ix]

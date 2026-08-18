@@ -39,19 +39,21 @@ function gaussianKernel(sigma: number): Float32Array {
   return k
 }
 
-/** 可分离高斯模糊，边缘按夹取处理 */
-function blur(plane: Float32Array, res: number, sigma: number): Float32Array {
-  const k = gaussianKernel(sigma)
-  const radius = (k.length - 1) / 2
+/** 可分离高斯模糊，两个方向可用不同 σ，边缘按夹取处理 */
+function blur(plane: Float32Array, res: number, sigmaX: number, sigmaY: number): Float32Array {
+  const kx = gaussianKernel(sigmaX)
+  const ky = gaussianKernel(sigmaY)
+  const rx = (kx.length - 1) / 2
+  const ry = (ky.length - 1) / 2
   const tmp = new Float32Array(res * res)
   const out = new Float32Array(res * res)
 
   for (let y = 0; y < res; y++) {
     for (let x = 0; x < res; x++) {
       let acc = 0
-      for (let i = -radius; i <= radius; i++) {
+      for (let i = -rx; i <= rx; i++) {
         const sx = Math.min(res - 1, Math.max(0, x + i))
-        acc += plane[y * res + sx] * k[i + radius]
+        acc += plane[y * res + sx] * kx[i + rx]
       }
       tmp[y * res + x] = acc
     }
@@ -59,9 +61,9 @@ function blur(plane: Float32Array, res: number, sigma: number): Float32Array {
   for (let y = 0; y < res; y++) {
     for (let x = 0; x < res; x++) {
       let acc = 0
-      for (let i = -radius; i <= radius; i++) {
+      for (let i = -ry; i <= ry; i++) {
         const sy = Math.min(res - 1, Math.max(0, y + i))
-        acc += tmp[sy * res + x] * k[i + radius]
+        acc += tmp[sy * res + x] * ky[i + ry]
       }
       out[y * res + x] = acc
     }
@@ -70,11 +72,20 @@ function blur(plane: Float32Array, res: number, sigma: number): Float32Array {
 }
 
 /**
- * @param rows     等宽字符行，一个字符 = 一个源格
- * @param res      输出分辨率（正方形）
- * @param softness 边界软化强度，单位为输出像素的高斯 σ
+ * @param rows      等宽字符行，一个字符 = 一个源格
+ * @param res       输出分辨率（正方形）
+ * @param softness  X 方向边界软化强度，单位为输出像素的高斯 σ
+ * @param softnessY Z 方向的 σ，省略时与 X 相同。
+ *   掩膜按正方形采样、世界是矩形时，同一个像素 σ 在两个方向对应的世界距离不同
+ *   （σ_world = softness × size/res），过渡带会被拉长。调用方若要世界空间各向同性，
+ *   应分别传入 σ_world × res/sizeX 与 σ_world × res/sizeZ。
  */
-export function buildMasks(rows: string[], res: number, softness: number): RegionMasks {
+export function buildMasks(
+  rows: string[],
+  res: number,
+  softness: number,
+  softnessY: number = softness,
+): RegionMasks {
   const srcH = rows.length
   const srcW = rows[0].length
   const keys = [...new Set(rows.join('').split(''))].sort()
@@ -104,7 +115,7 @@ export function buildMasks(rows: string[], res: number, softness: number): Regio
     }
   }
 
-  const blurred = planes.map(p => blur(p, res, softness))
+  const blurred = planes.map(p => blur(p, res, softness, softnessY))
 
   const data = new Float32Array(keys.length * res * res)
   for (let i = 0; i < res * res; i++) {
