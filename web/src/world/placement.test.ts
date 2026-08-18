@@ -51,3 +51,37 @@ describe('alignToNormal', () => {
     expect(up.angleTo(n)).toBeCloseTo(0, 6)
   })
 })
+
+describe('归一化与落地对齐的组合', () => {
+  it('组合后物体底面精确坐在落点上', () => {
+    const cases: Array<[number, number, number, THREE.Vector3, number, number, number, number]> = [
+      [4, 8, 4, new THREE.Vector3(17, -33, 9), 10, 50, 12.5, -30],
+      [6, 14, 3, new THREE.Vector3(100, 500, -200), 20, -80, 3, 44],
+      [300, 900, 120, new THREE.Vector3(17, -33, 9), 10, 0, 100, 0],
+    ]
+    for (const [w, h, d, off, target, px, py, pz] of cases) {
+      const obj = boxAt(w, h, d, off)
+      normalizeToHeight(obj, target)
+      alignToNormal(obj, { x: px, y: py, z: pz, nx: 0, ny: 1, nz: 0 })
+      obj.updateMatrixWorld(true)
+      const box = new THREE.Box3().setFromObject(obj)
+      const c = box.getCenter(new THREE.Vector3())
+      expect(box.min.y).toBeCloseTo(py, 4)   // 底面坐在落点上，不悬浮也不下陷
+      expect(c.x).toBeCloseTo(px, 4)
+      expect(c.z).toBeCloseTo(pz, 4)
+      expect(box.max.y - box.min.y).toBeCloseTo(target, 4)
+    }
+  })
+
+  it('重复归一化结果稳定（幂等）', () => {
+    const obj = boxAt(4, 8, 4, new THREE.Vector3(17, -33, 9))
+    const heights: number[] = []
+    for (let i = 0; i < 3; i++) {
+      normalizeToHeight(obj, 10)
+      obj.updateMatrixWorld(true)
+      const b = new THREE.Box3().setFromObject(obj)
+      heights.push(b.max.y - b.min.y)
+    }
+    for (const h of heights) expect(h).toBeCloseTo(10, 4)
+  })
+})

@@ -4,35 +4,29 @@
 import * as THREE from 'three'
 import type { Placement } from '@gbn/shared/world'
 
-/** 量包围盒 → 缩放到目标高度 → 原点移到底面中心 */
+/**
+ * 归一化：把物体的局部原点移到底面中心，并缩放到目标高度。
+ * 归一化后 object.position 不承载任何校正量，可被 alignToNormal 安全覆盖。
+ * 幂等：重复调用结果一致。
+ */
 export function normalizeToHeight(object: THREE.Object3D, targetHeight: number): void {
+  // 先复位自身变换，保证测量在未缩放状态下进行（这是幂等的关键）
+  object.scale.set(1, 1, 1)
+  object.position.set(0, 0, 0)
+  object.updateMatrixWorld(true)
+
   const box = new THREE.Box3().setFromObject(object)
   const size = new THREE.Vector3()
   const center = new THREE.Vector3()
   box.getSize(size)
   box.getCenter(center)
 
-  // 计算缩放因子
-  const scale = targetHeight / Math.max(size.y, 1e-4)
+  // 此时 scale 为 1，局部与世界同单位，可以直接平移子节点
+  const shift = new THREE.Vector3(-center.x, -box.min.y, -center.z)
+  for (const child of object.children) child.position.add(shift)
 
-  // 调整所有子对象位置，使其相对于包围盒中心而非 Group 位置
-  const offset = center.clone().sub(object.position)
-  object.children.forEach((child) => {
-    const relPos = child.position.clone().sub(offset)
-    child.position.copy(relPos)
-  })
-
-  // 现在 Group 的包围盒中心就在 Group 的原点
-  // 修改 Group 的位置和缩放
-  object.position.set(0, 0, 0)
-  object.scale.setScalar(scale)
-
-  // 更新矩阵以获得缩放后的包围盒
+  object.scale.setScalar(targetHeight / Math.max(size.y, 1e-4))
   object.updateMatrixWorld(true)
-
-  // 调整 y 坐标使底面落在 0
-  const newBox = new THREE.Box3().setFromObject(object)
-  object.position.y = -newBox.min.y
 }
 
 /** 把物体摆到落点并贴合地表法线 */
