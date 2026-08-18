@@ -14,8 +14,22 @@ const RES = 512
 const MESH_RES = 256
 const SIZE_X = 400
 const SIZE_Z = 250
-const SOFTNESS = 6
 const SEED = 20260818
+
+/** 边界过渡带的目标宽度，单位是世界单位（不是掩膜像素）。 */
+const SOFTNESS_WORLD = 3.5
+/**
+ * 掩膜按正方形采样、世界是矩形，同一个像素 σ 在两个方向对应的世界距离不同
+ * （σ_world = σ_px × size/res）。按轴换算才能得到世界空间各向同性的过渡带。
+ */
+const SOFTNESS_X = (SOFTNESS_WORLD * RES) / SIZE_X
+const SOFTNESS_Z = (SOFTNESS_WORLD * RES) / SIZE_Z
+
+/**
+ * 垂直夸张系数。profiles 的 base 沿用 data.ts 的 TERRAIN.height（图例上显示的数字），
+ * 真实比例下那点起伏铺在 400×250 上几乎看不出来，山地与平原的落差只有十来个单位。
+ */
+const VERTICAL_SCALE = 2.4
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const outDir = resolve(root, 'web/public/world')
@@ -50,9 +64,11 @@ validateMap(
   new Set(['.', '*', ...NATIONS.map(n => n.glyph)]),
 )
 
-const terrainMasks = buildMasks(TERRAIN_MAP, RES, SOFTNESS)
-const ownerMasks = buildMasks(OWNER_MAP, RES, SOFTNESS)
-const hf = buildHeightfield(terrainMasks, TERRAIN_PROFILES, SEED, SIZE_X, SIZE_Z)
+const terrainMasks = buildMasks(TERRAIN_MAP, RES, SOFTNESS_X, SOFTNESS_Z)
+const ownerMasks = buildMasks(OWNER_MAP, RES, SOFTNESS_X, SOFTNESS_Z)
+const hf = buildHeightfield(
+  terrainMasks, TERRAIN_PROFILES, SEED, SIZE_X, SIZE_Z, VERTICAL_SCALE,
+)
 
 const spec: WorldSpec = {
   res: RES,
@@ -73,5 +89,6 @@ writeFileSync(resolve(outDir, 'owners.bin'), Buffer.from(encodeRegions(ownerMask
 writeFileSync(resolve(outDir, 'world-spec.json'), JSON.stringify(spec, null, 2))
 
 console.log(`烘焙完成 -> ${outDir}`)
-console.log(`  采样 ${RES}  世界 ${SIZE_X}x${SIZE_Z}  高度 ${hf.min.toFixed(2)} ~ ${hf.max.toFixed(2)}`)
+console.log(`  采样 ${RES}  世界 ${SIZE_X}x${SIZE_Z}  垂直夸张 ${VERTICAL_SCALE}x`)
+console.log(`  高度 ${hf.min.toFixed(2)} ~ ${hf.max.toFixed(2)}  过渡带 ${SOFTNESS_WORLD} 世界单位`)
 console.log(`  地形区 ${terrainMasks.keys.join('')}  归属区 ${ownerMasks.keys.join('')}`)

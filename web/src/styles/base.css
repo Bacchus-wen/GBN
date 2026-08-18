@@ -198,6 +198,9 @@ button:focus-visible, a:focus-visible, [tabindex]:focus-visible {
 
 .map-stage {
   position: relative;
+  /* 高度必须给在这里：R3F 的 Canvas 会在包裹 div 上打内联的 height:100%，
+     内联优先级高于类，所以 .map-canvas 的 height 对它无效，父级不给高就会塌。 */
+  height: 520px;
   background:
     linear-gradient(180deg, var(--sea-2) 0%, var(--sea) 100%);
   border: 2px solid var(--line);
@@ -219,6 +222,7 @@ button:focus-visible, a:focus-visible, [tabindex]:focus-visible {
 .map-canvas.picking { cursor: crosshair; }
 
 @media (max-width: 720px) {
+  .map-stage { height: 380px; }
   .map-canvas { height: 380px; }
 }
 
