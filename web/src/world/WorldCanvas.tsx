@@ -11,7 +11,12 @@ import type { LoadedWorld } from './loadWorld'
 interface Props {
   world: LoadedWorld
   layer: LayerKey
-  onPick?: (point: THREE.Vector3, normal: THREE.Vector3, ownerGlyph: string) => void
+  onPick?: (
+    point: THREE.Vector3,
+    normal: THREE.Vector3,
+    ownerGlyph: string,
+    terrainKey: string,
+  ) => void
 }
 
 /** 观察方向（三四分之一俯视），归一化后乘取景距离得到相机位置 */

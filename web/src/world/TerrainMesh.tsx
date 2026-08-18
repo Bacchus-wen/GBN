@@ -12,8 +12,16 @@ import type { LoadedWorld } from './loadWorld'
 interface Props {
   world: LoadedWorld
   layer: LayerKey
-  /** 点击地形。ownerGlyph 是落点所属的归属层字符（'.' 海洋、'*' 无主） */
-  onPick?: (point: THREE.Vector3, normal: THREE.Vector3, ownerGlyph: string) => void
+  /**
+   * 点击地形。ownerGlyph 是归属层字符（'.' 海洋、'*' 无主），
+   * terrainKey 是地貌层字符（见 TERRAIN）。
+   */
+  onPick?: (
+    point: THREE.Vector3,
+    normal: THREE.Vector3,
+    ownerGlyph: string,
+    terrainKey: string,
+  ) => void
 }
 
 export function TerrainMesh({ world, layer, onPick }: Props) {
@@ -44,11 +52,11 @@ export function TerrainMesh({ world, layer, onPick }: Props) {
     const normal = e.face
       ? e.face.normal.clone().transformDirection(e.object.matrixWorld)
       : new THREE.Vector3(0, 1, 0)
-    const { spec, owners } = world
-    const glyph = spec.owners[
-      sampleIndex({ data: owners, res: spec.res, sizeX: spec.sizeX, sizeZ: spec.sizeZ }, e.point.x, e.point.z)
-    ] ?? '*'
-    onPick(e.point.clone(), normal, glyph)
+    const { spec, owners, regions } = world
+    const view = { res: spec.res, sizeX: spec.sizeX, sizeZ: spec.sizeZ }
+    const glyph = spec.owners[sampleIndex({ ...view, data: owners }, e.point.x, e.point.z)] ?? '*'
+    const terrainKey = spec.regions[sampleIndex({ ...view, data: regions }, e.point.x, e.point.z)] ?? 'p'
+    onPick(e.point.clone(), normal, glyph, terrainKey)
   }
 
   return (

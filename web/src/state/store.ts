@@ -10,6 +10,10 @@ export interface AppState {
   selectedNation: string | null
   /** 地形上最近一次的落点：坐标 + 法线 */
   selectedPlacement: Placement | null
+  /** 落点所属的归属层字符：'.' 海洋、'*' 无主 */
+  selectedOwnerGlyph: string
+  /** 落点的地貌字符，见 TERRAIN */
+  selectedTerrainKey: string
   layer: LayerKey
   view: ViewMode
   queue: QueueItem[]
@@ -42,6 +46,8 @@ export const initialState: AppState = {
   role: 'citizen',
   selectedNation: 'benchylvania',
   selectedPlacement: null,
+  selectedOwnerGlyph: '.',
+  selectedTerrainKey: '.',
   layer: 'owner',
   view: 'board',
   queue: [{
@@ -61,7 +67,7 @@ export const initialState: AppState = {
 export type Action =
   | { type: 'setRole'; role: RoleKey }
   | { type: 'selectNation'; id: string }
-  | { type: 'pickPlacement'; placement: Placement }
+  | { type: 'pickPlacement'; placement: Placement; ownerGlyph: string; terrainKey: string }
   | { type: 'setLayer'; layer: LayerKey }
   | { type: 'setView'; view: ViewMode }
   | { type: 'submitQueue'; item: QueueItem }
@@ -79,7 +85,12 @@ export function reducer(s: AppState, a: Action): AppState {
       return { ...s, selectedNation: a.id }
 
     case 'pickPlacement':
-      return { ...s, selectedPlacement: a.placement }
+      return {
+        ...s,
+        selectedPlacement: a.placement,
+        selectedOwnerGlyph: a.ownerGlyph,
+        selectedTerrainKey: a.terrainKey,
+      }
 
     case 'setLayer':
       return { ...s, layer: a.layer }

@@ -5,6 +5,7 @@ import { AiWorkshop } from './panels/AiWorkshop'
 import { CellPanel } from './panels/CellPanel'
 import { Leaderboard } from './panels/Leaderboard'
 import { NationPanel } from './panels/NationPanel'
+import { Pavilion } from './panels/Pavilion'
 import { ReviewQueue } from './panels/ReviewQueue'
 import { initialState, reducer, roleOf } from './state/store'
 import type { LayerKey } from './state/types'
@@ -92,10 +93,12 @@ export default function App() {
                     <WorldCanvas
                       world={world}
                       layer={state.layer}
-                      onPick={(pt, _n, glyph) => {
+                      onPick={(pt, _n, glyph, terrainKey) => {
                         dispatch({
                           type: 'pickPlacement',
                           placement: placementAt(world.hf, pt.x, pt.z, world.spec.meshRes),
+                          ownerGlyph: glyph,
+                          terrainKey,
                         })
                         // 点到某国领土就顺带选中它，恢复「点地图看国家」这条交互
                         const n = nationByGlyph(glyph)
@@ -144,6 +147,7 @@ export default function App() {
 
           <div className="stack">
             <NationPanel state={state} />
+            <Pavilion state={state} dispatch={dispatch} />
             <AiWorkshop state={state} dispatch={dispatch} />
             <ReviewQueue state={state} dispatch={dispatch} />
           </div>

@@ -148,3 +148,24 @@ export interface AiDraft {
   terrain?: TerrainKey
   text?: string
 }
+
+/**
+ * 展览馆展品。idea.md 把线上世博馆定为长线运营的核心形态：
+ * 「每个国家用作品说话，GBN 将以线上世博馆的形式呈现各个国家的 3D 作品」。
+ */
+export interface Exhibit {
+  id: string
+  nationId: string
+  title: string
+  author: string
+  authorAvatar: string
+  /** 创作方式。AI 生成的必须单独标识（社区明确要求的 AI Flair） */
+  origin: Origin
+  /** 被打印次数，是计入国家 GDP 的依据 */
+  prints: number
+  likes: number
+  /** 所属周主题活动，无主题为自由创作 */
+  theme?: string
+  /** 可下载的 3mf；鼓励用户优化后上传到 MakerWorld */
+  hasModel: boolean
+}
