@@ -25,16 +25,9 @@ export function AiWorkshop({ state, dispatch }: {
       dispatch({ type: 'toast', msg: '管理员无本国，切换为国民或领袖再生成' })
       return
     }
-    if (needCell && !state.selectedCell) {
-      dispatch({ type: 'toast', msg: '请先在地图上点选一个格子' })
+    if (needCell && !state.selectedPlacement) {
+      dispatch({ type: 'toast', msg: '请先在地图上点选一个落点' })
       return
-    }
-    if (needCell) {
-      const cell = state.cells.get(state.selectedCell!)
-      if (cell?.owner !== role.nationId) {
-        dispatch({ type: 'toast', msg: '只能在本国领土上营造' })
-        return
-      }
     }
     setOpen(kind)
   }
@@ -91,10 +84,12 @@ function DraftModal({ kind, state, dispatch, onClose }: {
   const [text, setText] = useState('')
 
   const label = { terrain: '地形', landmark: '地标', texture: '国家纹理', story: '背景故事' }[kind]
+  const p = state.selectedPlacement
+  const placementLabel = p ? `X${p.x.toFixed(1)} Z${p.z.toFixed(1)}` : ''
 
   // 硬约束：必须改写，且不能与 AI 原文相同
   const trimmed = text.trim()
-  const canSubmit = trimmed.length >= 4 && trimmed !== (ai.text ?? '').trim()
+  const canSubmit = trimmed.length >= 4 && trimmed !== (ai.text ?? '').trim() && (!needCell || !!p)
 
   const submit = () => {
     if (!canSubmit || !role.nationId) return
@@ -106,22 +101,20 @@ function DraftModal({ kind, state, dispatch, onClose }: {
         kind, scope: 'domestic', origin: 'ai',
         nationId: role.nationId,
         title: trimmed.slice(0, 40),
-        detail: needCell ? `落点 ${state.selectedCell}` : (nation?.name ?? ''),
+        detail: needCell && p ? `落点 ${placementLabel}` : (nation?.name ?? ''),
         rationale: ai.rationale,
         author: role.user,
         edited: true,
         at: '刚刚',
         payload: {
           terrain: ai.terrain,
-          cell: state.selectedCell ?? undefined,
+          cell: needCell && p ? `${p.x.toFixed(1)},${p.z.toFixed(1)}` : undefined,
           text: trimmed,
         },
       },
     })
     onClose()
   }
-
-  const cellInfo = state.selectedCell ? state.cells.get(state.selectedCell) : null
 
   return (
     <div className="scrim" onClick={e => { if (e.target === e.currentTarget) onClose() }}>
@@ -136,10 +129,9 @@ function DraftModal({ kind, state, dispatch, onClose }: {
           <div className="s10 kicker">AI 提议</div>
           <div className="s15 disp mt4">{ai.label}</div>
           <div className="rationale">理由：{ai.rationale}</div>
-          {needCell && state.selectedCell && (
+          {needCell && p && (
             <div className="s10 tm mt8">
-              落点 {state.selectedCell}
-              {cellInfo && ` · ${TERRAIN[cellInfo.terrain].name}`}
+              落点 {placementLabel}
               {ai.terrain && ` → ${TERRAIN[ai.terrain].name}`}
             </div>
           )}

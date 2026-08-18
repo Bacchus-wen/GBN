@@ -35,13 +35,8 @@ export function TripoPanel({ state, dispatch }: {
       dispatch({ type: 'toast', msg: '管理员无本国，切换为国民或领袖再生成' })
       return
     }
-    if (!state.selectedCell) {
-      dispatch({ type: 'toast', msg: '请先在地图上点选一个格子作为落点' })
-      return
-    }
-    const cell = state.cells.get(state.selectedCell)
-    if (cell?.owner !== role.nationId) {
-      dispatch({ type: 'toast', msg: '只能在本国领土上营造' })
+    if (!state.selectedPlacement) {
+      dispatch({ type: 'toast', msg: '请先在地图上点选一个落点' })
       return
     }
     setPrompt('')
@@ -73,7 +68,8 @@ export function TripoPanel({ state, dispatch }: {
   }
 
   const submitForReview = () => {
-    if (!role.nationId || !state.selectedCell) return
+    const p = state.selectedPlacement
+    if (!role.nationId || !p) return
     const modelUrl = task?.output?.pbr_model ?? task?.output?.model
     dispatch({ type: 'advanceAi', kind: 'landmark' })
     dispatch({
@@ -83,12 +79,12 @@ export function TripoPanel({ state, dispatch }: {
         kind: 'landmark', scope: 'domestic', origin: 'ai',
         nationId: role.nationId,
         title: prompt.trim().slice(0, 40),
-        detail: `落点 ${state.selectedCell} · Tripo 3D`,
+        detail: `落点 X${p.x.toFixed(1)} Z${p.z.toFixed(1)} · Tripo 3D`,
         rationale: `Tripo text-to-model 生成，prompt 由 ${role.user} 改写并署名。`,
         author: role.user,
         edited: true,
         at: '刚刚',
-        payload: { cell: state.selectedCell, text: modelUrl },
+        payload: { cell: `${p.x.toFixed(1)},${p.z.toFixed(1)}`, text: modelUrl },
       },
     })
     setPhase('idle')
@@ -162,7 +158,11 @@ export function TripoPanel({ state, dispatch }: {
             />
           )}
           <div className="f g6 mt8">
-            <button className="btn btn-sm btn-primary" onClick={submitForReview}>
+            <button
+              className="btn btn-sm btn-primary"
+              disabled={!state.selectedPlacement}
+              onClick={submitForReview}
+            >
               提交领袖核准
             </button>
             <button className="btn btn-sm" onClick={() => { setPhase('idle'); setTask(null) }}>

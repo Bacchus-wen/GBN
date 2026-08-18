@@ -1,5 +1,5 @@
-// 疆域与 GDP 排行。迁移自 activity-v2/app.js:775。
-import { NATIONS, territoryOf } from '@gbn/shared'
+// GDP 排行。迁移自 activity-v2/app.js:775，疆域统计随六角格移除一并下线。
+import { NATIONS } from '@gbn/shared'
 import type { Action, AppState } from '../state/store'
 import { SubHeader, fmt } from './bits'
 
@@ -12,9 +12,8 @@ export function Leaderboard({ state, dispatch }: {
 
   return (
     <section className="panel">
-      <SubHeader title="疆域与 GDP" note="点击切换国家" />
+      <SubHeader title="GDP 排行" note="点击切换国家" />
       {sorted.map((n, i) => {
-        const terr = territoryOf(state.cells, n.id).length
         const sel = n.id === state.selectedNation
         return (
           <button
@@ -42,7 +41,6 @@ export function Leaderboard({ state, dispatch }: {
             </div>
             <div style={{ textAlign: 'right' }}>
               <div className="s11 mono-num ti">{fmt(n.gdp)}</div>
-              <div className="s10 tm mono-num">{terr} 格</div>
             </div>
           </button>
         )
