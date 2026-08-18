@@ -5,6 +5,7 @@ import { AiWorkshop } from './panels/AiWorkshop'
 import { CellPanel } from './panels/CellPanel'
 import { Leaderboard } from './panels/Leaderboard'
 import { NationPanel } from './panels/NationPanel'
+import { Onboarding } from './panels/Onboarding'
 import { Pavilion } from './panels/Pavilion'
 import { ReviewQueue } from './panels/ReviewQueue'
 import { initialState, reducer, roleOf } from './state/store'
@@ -33,6 +34,16 @@ export default function App() {
 
   return (
     <>
+      {!state.onboarded && (
+        <Onboarding
+          onJoin={id => dispatch({ type: 'setCitizenship', nationId: id })}
+          onStateless={() => dispatch({ type: 'setCitizenship', nationId: null })}
+          onFound={() => {
+            dispatch({ type: 'setCitizenship', nationId: null })
+            dispatch({ type: 'toast', msg: '建国流程已记录，招满 3 位国民后提交社区管理员审核' })
+          }}
+        />
+      )}
       <div className="topbar">
         <div className="logo-cube">⬢</div>
         <div>

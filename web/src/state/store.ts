@@ -24,6 +24,10 @@ export interface AppState {
   nationOverrides: Record<string, Partial<Nation>>
   log: string[]
   toast: string | null
+  /** 用户的国籍。null 表示无国籍人士。mock 阶段落 localStorage */
+  citizenship: string | null
+  /** 是否已完成初次引导。二次登入直接进活动页 */
+  onboarded: boolean
 }
 
 function withOverride(
@@ -40,6 +44,27 @@ export function nationView(s: AppState, id: string | null): Nation | undefined {
   if (!base) return undefined
   const ov = s.nationOverrides[base.id]
   return ov ? { ...base, ...ov } : base
+}
+
+/**
+ * mock 阶段的持久化。接口形状按最终后端设计——将来换成真实用户档案时
+ * 只替换这两个函数，调用方不动。
+ */
+function readStored<T>(key: string, fallback: T): T {
+  try {
+    const raw = localStorage.getItem(key)
+    return raw === null ? fallback : (JSON.parse(raw) as T)
+  } catch {
+    return fallback
+  }
+}
+
+function writeStored(key: string, value: unknown): void {
+  try {
+    localStorage.setItem(key, JSON.stringify(value))
+  } catch {
+    // 隐私模式等场景下写不进去，不影响本次会话
+  }
 }
 
 export const initialState: AppState = {
@@ -62,6 +87,8 @@ export const initialState: AppState = {
   nationOverrides: {},
   log: [],
   toast: null,
+  citizenship: readStored('gbn.citizenship', null),
+  onboarded: readStored('gbn.onboarded', false),
 }
 
 export type Action =
@@ -75,6 +102,7 @@ export type Action =
   | { type: 'advanceAi'; kind: DraftKind }
   | { type: 'toast'; msg: string | null }
   | { type: 'addLandmark'; landmark: Landmark }
+  | { type: 'setCitizenship'; nationId: string | null }
 
 export function reducer(s: AppState, a: Action): AppState {
   switch (a.type) {
@@ -83,6 +111,20 @@ export function reducer(s: AppState, a: Action): AppState {
 
     case 'selectNation':
       return { ...s, selectedNation: a.id }
+
+    case 'setCitizenship': {
+      writeStored('gbn.citizenship', a.nationId)
+      writeStored('gbn.onboarded', true)
+      return {
+        ...s,
+        citizenship: a.nationId,
+        onboarded: true,
+        selectedNation: a.nationId ?? s.selectedNation,
+        toast: a.nationId
+          ? `已加入 ${nationById(a.nationId)?.name ?? ''}，你的打印将计入该国 GDP`
+          : '你现在是无国籍人士，随时可以加入国家',
+      }
+    }
 
     case 'pickPlacement':
       return {

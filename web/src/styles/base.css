@@ -370,3 +370,30 @@ button:focus-visible, a:focus-visible, [tabindex]:focus-visible {
   html { scroll-behavior: auto; }
   * { transition: none !important; }
 }
+
+/* ---------- 引导弹窗 ---------- */
+
+.w100 { width: 100%; }
+
+/* 可点击的 row：把 button 的默认样式抹平，保持与列表行一致的观感 */
+button.row {
+  width: 100%;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+button.row:hover { background: var(--panel-2); }
+
+/* 引导弹窗。用专属类而不是给 .modal 加规则——AiWorkshop 也在用 .modal。
+   文字与按钮留白，列表行做全出血，与面板里的 .row 观感一致。 */
+.modal-onboard .btn { display: block; text-align: left; }
+.modal-onboard > h2,
+.modal-onboard > p,
+.modal-onboard > .btn { margin-left: 18px; margin-right: 18px; }
+.modal-onboard > h2 { margin-top: 18px; }
+.modal-onboard > *:last-child { margin-bottom: 18px; }
+.modal-onboard .w100 { width: calc(100% - 36px); }
