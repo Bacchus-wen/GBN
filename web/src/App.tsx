@@ -104,6 +104,11 @@ export default function App() {
                     <WorldCanvas
                       world={world}
                       layer={state.layer}
+                      landmarks={state.landmarks}
+                      onSelectLandmark={l => {
+                        dispatch({ type: 'selectNation', id: l.nationId })
+                        dispatch({ type: 'toast', msg: `${l.name} · ${l.author}` })
+                      }}
                       onPick={(pt, _n, glyph, terrainKey) => {
                         dispatch({
                           type: 'pickPlacement',

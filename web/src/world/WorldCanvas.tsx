@@ -4,13 +4,17 @@ import { OrbitControls } from '@react-three/drei'
 import { Canvas, useThree } from '@react-three/fiber'
 import { useEffect } from 'react'
 import * as THREE from 'three'
+import { Landmarks } from './Landmarks'
 import { TerrainMesh } from './TerrainMesh'
+import type { Landmark } from '@gbn/shared'
 import type { LayerKey } from '../state/types'
 import type { LoadedWorld } from './loadWorld'
 
 interface Props {
   world: LoadedWorld
   layer: LayerKey
+  landmarks: Landmark[]
+  onSelectLandmark?: (l: Landmark) => void
   onPick?: (
     point: THREE.Vector3,
     normal: THREE.Vector3,
@@ -101,7 +105,7 @@ function SeaPlane({ world }: { world: LoadedWorld }) {
   )
 }
 
-export function WorldCanvas({ world, layer, onPick }: Props) {
+export function WorldCanvas({ world, layer, landmarks, onPick, onSelectLandmark }: Props) {
   const { sizeX, sizeZ, max } = world.spec
   const span = Math.max(sizeX, sizeZ)
   return (
@@ -115,6 +119,7 @@ export function WorldCanvas({ world, layer, onPick }: Props) {
       />
       <SeaPlane world={world} />
       <TerrainMesh world={world} layer={layer} onPick={onPick} />
+      <Landmarks world={world} landmarks={landmarks} onSelect={onSelectLandmark} />
       <OrbitControls makeDefault enableDamping />
       <FitCamera world={world} />
     </Canvas>
