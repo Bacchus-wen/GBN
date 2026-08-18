@@ -132,6 +132,24 @@ Base URL `https://openapi.tripo3d.ai/v3`，`Authorization: Bearer {key}`，
 
 API Key 只存在于服务端，前端只与 `/api/tripo/*` 通信。
 
+### 4.1 当前 key 状态与适配层（重要）
+
+截至本文档定稿，**可用的 Tripo API Key 尚未到位**（此前两次分别是 CLI token 与
+资源 id，均非 OpenAPI key）。因此 3D 生成必须落在一个适配层之后：
+
+```ts
+interface MeshSource {
+  generate(req: MeshRequest): Promise<MeshResult>   // 返回 GLB URL 或本地 blob
+}
+```
+
+- `ProceduralMeshSource` —— 默认实现，程序化几何（岩石、植被、图腾柱），零 API 依赖
+- `TripoMeshSource` —— key 到位后接入，不改调用方
+
+分层影响：**层 1 完全不依赖 3D API**；**层 2 的散布原型优先走程序化**（论文的
+scatter 资产本就是重复实例化的低价值几何，花钱生成不划算）；**只有层 3 的定制地标
+必须等真实 key**。因此实施顺序为层 1 → 层 2 → 层 3，key 不构成路径阻塞。
+
 ---
 
 ## 5. 模块边界
