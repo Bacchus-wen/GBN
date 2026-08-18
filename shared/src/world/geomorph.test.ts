@@ -46,6 +46,17 @@ describe('dune 沙丘算子', () => {
       expect(v).toBeLessThanOrEqual(1)
     }
   })
+  it('非零 angle 时周期方向随波矢旋转', () => {
+    const angle = 0.6
+    const freq = 3
+    const period = (Math.PI * 2) / freq
+    const dx = Math.cos(angle) * period
+    const dy = Math.sin(angle) * period
+    expect(dune(dx, dy, angle, freq)).toBeCloseTo(dune(0, 0, angle, freq), 10)
+    // 沿 x 轴平移同样距离则不应相等，否则说明 angle 没起作用
+    expect(Math.abs(dune(period, 0, angle, freq) - dune(0, 0, angle, freq)))
+      .toBeGreaterThan(1e-3)
+  })
 })
 
 describe('erode 侵蚀算子', () => {
@@ -57,5 +68,10 @@ describe('erode 侵蚀算子', () => {
   })
   it('不会削到负值', () => {
     expect(erode(0.05, 10, 1)).toBeGreaterThanOrEqual(0)
+  })
+  it('负高程原样返回，不被侵蚀也不被钳到 0', () => {
+    expect(erode(-6, 0, 0.5)).toBe(-6)
+    expect(erode(-6, 10, 0.5)).toBe(-6)
+    expect(erode(-0.01, 3, 1)).toBe(-0.01)
   })
 })

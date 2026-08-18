@@ -20,7 +20,8 @@ export function dune(x: number, y: number, angle: number, freq: number): number 
   return (Math.sin(k * freq) + 1) / 2
 }
 
-/** 侵蚀：按局部坡度削减高度，不低于 0 */
+/** 侵蚀：按局部坡度削减高度，不低于 0。海平面以下（v ≤ 0）不参与侵蚀，原样返回。 */
 export function erode(v: number, gradMag: number, k: number): number {
+  if (v <= 0) return v
   return Math.max(0, v - k * gradMag * v)
 }
