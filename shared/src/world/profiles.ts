@@ -31,7 +31,7 @@ export const TERRAIN_PROFILES: Record<string, TerrainProfile> = {
   f: { base: 13, noise: [{ freq: 3, amp: 1.8 }, { freq: 8, amp: 0.6 }], ops: [] },
   m: {
     base: 20,
-    noise: [{ freq: 2.5, amp: 6 }, { freq: 5, amp: 2 }],
+    noise: [{ freq: 2.5, amp: 6 }, { freq: 7, amp: 2 }],
     ops: [{ kind: 'ridge', weight: 8 }, { kind: 'erode', weight: 1, k: 0.35 }],
   },
   c: { base: 5, noise: [{ freq: 3, amp: 0.8 }], ops: [] },
