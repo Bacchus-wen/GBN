@@ -1363,7 +1363,7 @@ git commit -m "feat: 浏览器端世界加载与地形渲染"
 - Modify: `shared/src/world/index.ts`（导出 placement）
 
 **Interfaces:**
-- Consumes: Task 4 的 `Heightfield` / `sampleHeight`
+- Consumes: Task 4 的 `Heightfield` / `sampleHeight` / `sampleHeightOnMesh`
 - Produces:
   - `interface Placement { x: number; y: number; z: number; nx: number; ny: number; nz: number }`
   - `placementAt(hf: Heightfield, x: number, z: number): Placement`（shared，纯函数）
@@ -1377,8 +1377,10 @@ git commit -m "feat: 浏览器端世界加载与地形渲染"
 ```ts
 import { describe, expect, it } from 'vitest'
 import { buildMasks } from './masks.js'
-import { TERRAIN_PROFILES, buildHeightfield, sampleHeight } from './heightfield.js'
+import { TERRAIN_PROFILES, buildHeightfield, sampleHeightOnMesh } from './heightfield.js'
 import { placementAt } from './placement.js'
+
+const MESH_RES = 256
 
 const hf = buildHeightfield(
   buildMasks(['ppmm', 'ppmm', 'ccii', 'ccii'], 64, 3),
@@ -1386,23 +1388,41 @@ const hf = buildHeightfield(
 )
 
 describe('placementAt', () => {
-  it('落点高度等于该处采样高度', () => {
-    expect(placementAt(hf, 12, -34).y).toBeCloseTo(sampleHeight(hf, 12, -34), 6)
+  it('落点高度与渲染网格插值逐位一致', () => {
+    // 本模块存在的意义：物体必须精确坐在看得见的地面上，不悬浮也不陷入
+    for (const [x, z] of [[12, -34], [0, 0], [77.5, 41.25], [-150, 100]]) {
+      expect(placementAt(hf, x, z, MESH_RES).y)
+        .toBe(sampleHeightOnMesh(hf, x, z, MESH_RES))
+    }
   })
 
   it('法线是单位向量', () => {
-    const p = placementAt(hf, 40, 40)
+    const p = placementAt(hf, 40, 40, MESH_RES)
     expect(Math.hypot(p.nx, p.ny, p.nz)).toBeCloseTo(1, 6)
   })
 
   it('法线朝上', () => {
     for (const [x, z] of [[0, 0], [50, -80], [-120, 90]]) {
-      expect(placementAt(hf, x, z).ny).toBeGreaterThan(0)
+      expect(placementAt(hf, x, z, MESH_RES).ny).toBeGreaterThan(0)
     }
   })
 
+  it('陡坡处法线明显偏离竖直，平坦处接近竖直', () => {
+    let steepest = 1
+    let flattest = 0
+    for (let i = 0; i < 400; i++) {
+      const x = -hf.sizeX / 2 + ((i * 7.3) % hf.sizeX)
+      const z = -hf.sizeZ / 2 + ((i * 11.7) % hf.sizeZ)
+      const ny = placementAt(hf, x, z, MESH_RES).ny
+      steepest = Math.min(steepest, ny)
+      flattest = Math.max(flattest, ny)
+    }
+    expect(steepest).toBeLessThan(0.99)
+    expect(flattest).toBeGreaterThan(0.999)
+  })
+
   it('越界坐标不产生 NaN', () => {
-    const p = placementAt(hf, 99999, -99999)
+    const p = placementAt(hf, 99999, -99999, MESH_RES)
     expect(Number.isFinite(p.y)).toBe(true)
     expect(Number.isFinite(p.nx)).toBe(true)
     expect(Number.isFinite(p.nz)).toBe(true)
@@ -1420,10 +1440,15 @@ Expected: FAIL，`Cannot find module './placement.js'`
 创建 `shared/src/world/placement.ts`：
 
 ```ts
-// 落点解析计算。论文 Eq.10–13 要从 2D 构图反解物体位姿，
-// 我们的地形是自有高度场，落点与法线可以直接解析求得。
+// 落点计算。论文 Eq.10–13 要从 2D 构图反解物体位姿，
+// 我们的地形是自有高度场，落点与法线可以直接求得。
+//
+// 高度取自 sampleHeightOnMesh：ridge/terrace 刻意制造锐利折线与阶跃，
+// 解析场与渲染网格在单元内部本就不相等，物体必须坐在「看得见的那个面」上。
+// 法线则取自解析场的中心差分——三角面片法线是分片常量，直接用会让物体朝向
+// 在跨越面片时突跳。
 
-import { sampleHeight } from './heightfield.js'
+import { sampleHeight, sampleHeightOnMesh } from './heightfield.js'
 import type { Heightfield } from './heightfield.js'
 
 export interface Placement {
@@ -1435,10 +1460,15 @@ export interface Placement {
   nz: number
 }
 
-export function placementAt(hf: Heightfield, x: number, z: number): Placement {
+export function placementAt(
+  hf: Heightfield,
+  x: number,
+  z: number,
+  meshRes: number,
+): Placement {
   const epsX = hf.sizeX / (hf.res - 1)
   const epsZ = hf.sizeZ / (hf.res - 1)
-  const y = sampleHeight(hf, x, z)
+  const y = sampleHeightOnMesh(hf, x, z, meshRes)
 
   // 中心差分求梯度，法线 = normalize(-dh/dx, 1, -dh/dz)
   const dhdx = (sampleHeight(hf, x + epsX, z) - sampleHeight(hf, x - epsX, z)) / (2 * epsX)
@@ -1458,7 +1488,7 @@ export * from './placement.js'
 - [ ] **Step 4: 运行测试确认通过**
 
 Run: `npx vitest run shared/src/world/placement.test.ts`
-Expected: PASS，4 个用例全绿
+Expected: PASS，5 个用例全绿
 
 - [ ] **Step 5: 实现 web 侧归一化与对齐**
 
@@ -1662,7 +1692,7 @@ import type { LoadedWorld } from './world/loadWorld'
                       world={world}
                       onPick={pt => dispatch({
                         type: 'pickPlacement',
-                        placement: placementAt(world.hf, pt.x, pt.z),
+                        placement: placementAt(world.hf, pt.x, pt.z, world.spec.meshRes),
                       })}
                     />
                     )
@@ -1676,7 +1706,7 @@ import type { LoadedWorld } from './world/loadWorld'
 - [ ] **Step 6: 全量验证**
 
 Run: `npx vitest run`
-Expected: PASS，只剩 world 测试共 42 个用例（noise 8 + geomorph 11 + masks 5 + heightfield 7 + codec 3 + shared placement 4 + web placement 4），六角相关用例全部消失
+Expected: PASS，只剩 world 测试共 46 个用例（noise 8 + geomorph 13 + masks 5 + heightfield 8 + codec 3 + shared placement 5 + web placement 4），六角相关用例全部消失
 
 Run: `npm run build`
 Expected: 构建成功，无 TypeScript 报错
