@@ -4,20 +4,21 @@
 // 没有模型的地标用程序化几何占位——这正是论文里 scatter 资产的做法：
 // 重复实例化的低价值几何不该花钱生成。有 modelUrl 的走 GLB 加载（层 3 后续）。
 
-import { placementAt } from '@gbn/shared/world'
 import { nationById } from '@gbn/shared'
 import { useGLTF } from '@react-three/drei'
 import { Suspense, useMemo } from 'react'
 import * as THREE from 'three'
 import { alignToNormal, normalizeToHeight } from './placement'
 import type { Landmark, Placement } from '@gbn/shared'
-import type { LoadedWorld } from './loadWorld'
 
 interface Props {
-  world: LoadedWorld
   landmarks: Landmark[]
+  /** 当前选中的下标 */
+  selectedIdx?: number | null
   /** 点击地标 */
-  onSelect?: (l: Landmark) => void
+  onSelect?: (l: Landmark, idx: number) => void
+  /** 在地标上按下指针，开始拖拽摆放 */
+  onStartDrag?: (idx: number) => void
 }
 
 /**
@@ -52,45 +53,66 @@ function GlbMarker({ url, p }: { url: string; p: Placement }) {
   return <primitive object={object} />
 }
 
-function Marker({ world, l, onSelect }: { world: LoadedWorld; l: Landmark; onSelect?: (l: Landmark) => void }) {
+function Marker({
+  l, idx, selected, onSelect, onStartDrag,
+}: {
+  l: Landmark
+  idx: number
+  selected: boolean
+  onSelect?: (l: Landmark, idx: number) => void
+  onStartDrag?: (idx: number) => void
+}) {
   const nation = nationById(l.nationId)
   const color = nation?.color ?? '#9aa4b2'
   const pending = l.status !== 'approved'
 
-  // 重新贴合地形：种子数据里的 y 是 0，不能直接用
-  const p = useMemo(
-    () => placementAt(world.hf, l.placement.x, l.placement.z, world.spec.meshRes),
-    [world, l.placement.x, l.placement.z],
-  )
+  // 落点由 store 在世界加载时统一贴合过（snapLandmarks），这里直接用，
+  // 保证画出来的位置与面板显示、拖拽写回的数据是同一份。
+  const p = l.placement
 
   // 有生成模型就用模型，没有就用程序化占位。
   // 模型加载中由 Suspense 兜底为占位塔身，不让世界出现空洞。
+  const handlers = {
+    onClick: (e: { stopPropagation: () => void }) => { e.stopPropagation(); onSelect?.(l, idx) },
+    onPointerDown: onStartDrag
+      ? (e: { stopPropagation: () => void }) => { e.stopPropagation(); onStartDrag(idx) }
+      : undefined,
+  }
+
   if (l.modelUrl) {
     return (
-      <group onClick={e => { e.stopPropagation(); onSelect?.(l) }}>
+      <group {...handlers}>
         <Suspense fallback={<Pylon p={p} color={color} pending />}>
           <GlbMarker url={l.modelUrl} p={p} />
         </Suspense>
         <mesh position={[p.x, p.y + 0.4, p.z]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[4.4, 6.2, 18]} />
-          <meshBasicMaterial color={color} transparent opacity={0.7} side={THREE.DoubleSide} />
+          <ringGeometry args={selected ? [5.6, 8.4, 24] : [4.4, 6.2, 18]} />
+          <meshBasicMaterial
+            color={selected ? '#ffd166' : color}
+            transparent
+            opacity={selected ? 0.95 : 0.7}
+            side={THREE.DoubleSide}
+          />
         </mesh>
       </group>
     )
   }
 
-  return <Pylon p={p} color={color} pending={pending} onClick={() => onSelect?.(l)} />
+  return <Pylon p={p} color={color} pending={pending} selected={selected} handlers={handlers} />
 }
 
 /** 程序化占位地标 */
 function Pylon({
-  p, color, pending, onClick,
-}: { p: Placement; color: string; pending: boolean; onClick?: () => void }) {
+  p, color, pending, selected, handlers,
+}: {
+  p: Placement
+  color: string
+  pending: boolean
+  selected?: boolean
+  handlers?: Record<string, unknown>
+}) {
   return (
-    <group
-      position={[p.x, p.y, p.z]}
-      onClick={e => { e.stopPropagation(); onClick?.() }}
-    >
+    <group position={[p.x, p.y, p.z]} {...handlers}>
       {/* 塔身用骨白色而不是国家色：归属层的地面本身就是国家色，
           同色塔身等于隐形。国家身份交给顶部宝石和基座环去表达。 */}
       <mesh position={[0, PYLON_H / 2, 0]} castShadow>
@@ -117,19 +139,32 @@ function Pylon({
       </mesh>
 
       {/* 基座环，让地标在起伏地形上也有明确的落地感 */}
+      {/* 基座环。选中时换成金色加粗，是「这个被选中了」的唯一视觉信号 */}
       <mesh position={[0, 0.4, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[4.4, 6.2, 18]} />
-        <meshBasicMaterial color={color} transparent opacity={pending ? 0.3 : 0.7} side={THREE.DoubleSide} />
+        <ringGeometry args={selected ? [5.6, 8.4, 24] : [4.4, 6.2, 18]} />
+        <meshBasicMaterial
+          color={selected ? '#ffd166' : color}
+          transparent
+          opacity={selected ? 0.95 : pending ? 0.3 : 0.7}
+          side={THREE.DoubleSide}
+        />
       </mesh>
     </group>
   )
 }
 
-export function Landmarks({ world, landmarks, onSelect }: Props) {
+export function Landmarks({ landmarks, selectedIdx, onSelect, onStartDrag }: Props) {
   return (
     <>
       {landmarks.map((l, i) => (
-        <Marker key={`${l.nationId}-${l.name}-${i}`} world={world} l={l} onSelect={onSelect} />
+        <Marker
+          key={`${l.nationId}-${l.name}-${i}`}
+          l={l}
+          idx={i}
+          selected={selectedIdx === i}
+          onSelect={onSelect}
+          onStartDrag={onStartDrag}
+        />
       ))}
     </>
   )

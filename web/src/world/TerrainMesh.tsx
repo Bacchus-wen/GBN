@@ -22,9 +22,11 @@ interface Props {
     ownerGlyph: string,
     terrainKey: string,
   ) => void
+  /** 指针在地形上移动。拖拽地标时用它实时取落点。 */
+  onHover?: (point: THREE.Vector3) => void
 }
 
-export function TerrainMesh({ world, layer, onPick }: Props) {
+export function TerrainMesh({ world, layer, onPick, onHover }: Props) {
   // 几何只依赖世界数据，切图层时不必重建
   const geometry = useMemo(() => {
     const { sizeX, sizeZ, meshRes } = world.spec
@@ -60,7 +62,13 @@ export function TerrainMesh({ world, layer, onPick }: Props) {
   }
 
   return (
-    <mesh geometry={geometry} onClick={handleClick} receiveShadow castShadow>
+    <mesh
+      geometry={geometry}
+      onClick={handleClick}
+      onPointerMove={onHover ? e => { e.stopPropagation(); onHover(e.point) } : undefined}
+      receiveShadow
+      castShadow
+    >
       <meshStandardMaterial vertexColors roughness={0.92} metalness={0.02} />
     </mesh>
   )

@@ -33,6 +33,13 @@ export interface AppState {
    * 让用户看见东西正在这里长出来，而不是对着空地干等。
    */
   generating: { placement: Placement; label: string } | null
+  /**
+   * 选中的地标在 landmarks 数组里的下标。用下标而非 id 是因为 Landmark
+   * 目前没有 id 字段；核准只会往数组尾部追加，已有项的下标在会话内稳定。
+   */
+  selectedLandmarkIdx: number | null
+  /** 是否处于拖拽摆放状态。拖拽时会临时关掉轨道相机，避免抢手势。 */
+  draggingLandmark: boolean
 }
 
 function withOverride(
@@ -95,6 +102,8 @@ export const initialState: AppState = {
   citizenship: readStored('gbn.citizenship', null),
   onboarded: readStored('gbn.onboarded', false),
   generating: null,
+  selectedLandmarkIdx: null,
+  draggingLandmark: false,
 }
 
 export type Action =
@@ -110,6 +119,10 @@ export type Action =
   | { type: 'addLandmark'; landmark: Landmark }
   | { type: 'setCitizenship'; nationId: string | null }
   | { type: 'setGenerating'; generating: AppState['generating'] }
+  | { type: 'selectLandmark'; idx: number | null }
+  | { type: 'setDragging'; dragging: boolean }
+  | { type: 'moveLandmark'; idx: number; placement: Placement }
+  | { type: 'snapLandmarks'; snap: (x: number, z: number) => Placement }
 
 export function reducer(s: AppState, a: Action): AppState {
   switch (a.type) {
@@ -121,6 +134,31 @@ export function reducer(s: AppState, a: Action): AppState {
 
     case 'setGenerating':
       return { ...s, generating: a.generating }
+
+    case 'selectLandmark':
+      return { ...s, selectedLandmarkIdx: a.idx, draggingLandmark: false }
+
+    case 'setDragging':
+      return { ...s, draggingLandmark: a.dragging }
+
+    // 种子地标的坐标是 authoring 期写死的，y 与法线都是占位值（那时拿不到
+    // 烘焙产物）。世界加载完就把它们一次性贴合到真实地形，让存的数据与
+    // 画出来的一致——否则面板会显示「高 0.0」而模型明明站在山上。
+    case 'snapLandmarks':
+      return {
+        ...s,
+        landmarks: s.landmarks.map(l => ({
+          ...l,
+          placement: a.snap(l.placement.x, l.placement.z),
+        })),
+      }
+
+    case 'moveLandmark': {
+      const landmarks = s.landmarks.map(
+        (l, i) => i === a.idx ? { ...l, placement: a.placement } : l,
+      )
+      return { ...s, landmarks }
+    }
 
     case 'setCitizenship': {
       writeStored('gbn.citizenship', a.nationId)
