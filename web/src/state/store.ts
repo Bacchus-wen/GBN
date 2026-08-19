@@ -28,6 +28,11 @@ export interface AppState {
   citizenship: string | null
   /** 是否已完成初次引导。二次登入直接进活动页 */
   onboarded: boolean
+  /**
+   * 正在生成中的地标。Tripo 一次要 1-3 分钟，这段时间地图上先立一个占位体，
+   * 让用户看见东西正在这里长出来，而不是对着空地干等。
+   */
+  generating: { placement: Placement; label: string } | null
 }
 
 function withOverride(
@@ -89,6 +94,7 @@ export const initialState: AppState = {
   toast: null,
   citizenship: readStored('gbn.citizenship', null),
   onboarded: readStored('gbn.onboarded', false),
+  generating: null,
 }
 
 export type Action =
@@ -103,6 +109,7 @@ export type Action =
   | { type: 'toast'; msg: string | null }
   | { type: 'addLandmark'; landmark: Landmark }
   | { type: 'setCitizenship'; nationId: string | null }
+  | { type: 'setGenerating'; generating: AppState['generating'] }
 
 export function reducer(s: AppState, a: Action): AppState {
   switch (a.type) {
@@ -111,6 +118,9 @@ export function reducer(s: AppState, a: Action): AppState {
 
     case 'selectNation':
       return { ...s, selectedNation: a.id }
+
+    case 'setGenerating':
+      return { ...s, generating: a.generating }
 
     case 'setCitizenship': {
       writeStored('gbn.citizenship', a.nationId)

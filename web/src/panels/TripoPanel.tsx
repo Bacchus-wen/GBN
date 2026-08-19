@@ -2,7 +2,9 @@
 // 同 AI 文本草案一样的硬约束：prompt 必须人工改写才能提交。
 import { nationById } from '@gbn/shared'
 import { useEffect, useRef, useState } from 'react'
-import { createLandmarkTask, pollTask, type TripoTask } from '../api/tripo'
+import {
+  createLandmarkTask, ingestAsset, modelUrlOf, pollTask, previewUrlOf, type TripoTask,
+} from '../api/tripo'
 import { nextAiDraft, roleOf, type Action, type AppState } from '../state/store'
 
 type Phase = 'idle' | 'editing' | 'running' | 'done' | 'error'
@@ -14,6 +16,8 @@ export function TripoPanel({ state, dispatch }: {
   const [phase, setPhase] = useState<Phase>('idle')
   const [prompt, setPrompt] = useState('')
   const [task, setTask] = useState<TripoTask | null>(null)
+  /** 入库后的稳定本地地址。Tripo 原始 URL 约 24h 过期，不能直接存进数据 */
+  const [assetUrl, setAssetUrl] = useState<string | null>(null)
   const [err, setErr] = useState<string | null>(null)
   const stop = useRef<(() => void) | null>(null)
 
@@ -47,6 +51,10 @@ export function TripoPanel({ state, dispatch }: {
   const generate = async () => {
     setPhase('running')
     setErr(null)
+    const spot = state.selectedPlacement
+    if (spot) {
+      dispatch({ type: 'setGenerating', generating: { placement: spot, label: prompt.trim() } })
+    }
     try {
       const { task_id } = await createLandmarkTask({
         prompt: prompt.trim(),
@@ -56,12 +64,36 @@ export function TripoPanel({ state, dispatch }: {
         onUpdate: t => setTask(t),
         onDone: t => {
           setTask(t)
-          setPhase(t.status === 'success' ? 'done' : 'error')
-          if (t.status !== 'success') setErr(`生成${t.status === 'failed' ? '失败' : '被取消'}`)
+          if (t.status !== 'success') {
+            dispatch({ type: 'setGenerating', generating: null })
+            setPhase('error')
+            setErr(`生成${t.status === 'failed' ? '失败' : '被取消'}`)
+            return
+          }
+          // 立刻入库。等到核准时再下载就晚了——签名 URL 那时可能已经过期。
+          const remote = modelUrlOf(t)
+          if (!remote) {
+            dispatch({ type: 'setGenerating', generating: null })
+            setPhase('error')
+            setErr('生成成功但没有返回模型地址')
+            return
+          }
+          ingestAsset({ url: remote, key: t.task_id })
+            .then(a => { setAssetUrl(a.url); setPhase('done') })
+            .catch(e => {
+              dispatch({ type: 'setGenerating', generating: null })
+              setErr(`模型入库失败：${e instanceof Error ? e.message : '未知错误'}`)
+              setPhase('error')
+            })
         },
-        onError: e => { setErr(e.message); setPhase('error') },
+        onError: e => {
+          dispatch({ type: 'setGenerating', generating: null })
+          setErr(e.message)
+          setPhase('error')
+        },
       })
     } catch (e) {
+      dispatch({ type: 'setGenerating', generating: null })
       setErr(e instanceof Error ? e.message : '请求失败')
       setPhase('error')
     }
@@ -70,7 +102,6 @@ export function TripoPanel({ state, dispatch }: {
   const submitForReview = () => {
     const p = state.selectedPlacement
     if (!role.nationId || !p) return
-    const modelUrl = task?.output?.pbr_model ?? task?.output?.model
     dispatch({ type: 'advanceAi', kind: 'landmark' })
     dispatch({
       type: 'submitQueue',
@@ -84,11 +115,13 @@ export function TripoPanel({ state, dispatch }: {
         author: role.user,
         edited: true,
         at: '刚刚',
-        payload: { placement: p, text: modelUrl },
+        payload: { placement: p, text: assetUrl ?? undefined },
       },
     })
     setPhase('idle')
     setTask(null)
+    setAssetUrl(null)
+    dispatch({ type: 'setGenerating', generating: null })
     dispatch({ type: 'toast', msg: '已提交领袖核准' })
   }
 
@@ -148,10 +181,13 @@ export function TripoPanel({ state, dispatch }: {
 
       {phase === 'done' && (
         <div className="mt8">
-          <div className="tag tag-ok">✓ 生成完成</div>
-          {task?.output?.rendered_image && (
+          <div className="f g6 ai fw">
+            <span className="tag tag-ok">✓ 生成完成</span>
+            {assetUrl && <span className="s10 tm">模型已入库，不受 Tripo 链接过期影响</span>}
+          </div>
+          {task && previewUrlOf(task) && (
             <img
-              src={task.output.rendered_image}
+              src={previewUrlOf(task)}
               alt="Tripo 生成预览"
               className="inset mt6"
               style={{ width: '100%', imageRendering: 'pixelated' }}
@@ -165,7 +201,15 @@ export function TripoPanel({ state, dispatch }: {
             >
               提交领袖核准
             </button>
-            <button className="btn btn-sm" onClick={() => { setPhase('idle'); setTask(null) }}>
+            <button
+              className="btn btn-sm"
+              onClick={() => {
+                setPhase('idle')
+                setTask(null)
+                setAssetUrl(null)
+                dispatch({ type: 'setGenerating', generating: null })
+              }}
+            >
               丢弃
             </button>
           </div>

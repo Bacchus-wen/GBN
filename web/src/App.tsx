@@ -105,6 +105,7 @@ export default function App() {
                       world={world}
                       layer={state.layer}
                       landmarks={state.landmarks}
+                      generating={state.generating?.placement ?? null}
                       onSelectLandmark={l => {
                         dispatch({ type: 'selectNation', id: l.nationId })
                         dispatch({ type: 'toast', msg: `${l.name} · ${l.author}` })

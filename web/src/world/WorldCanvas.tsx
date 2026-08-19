@@ -4,9 +4,10 @@ import { OrbitControls } from '@react-three/drei'
 import { Canvas, useThree } from '@react-three/fiber'
 import { useEffect } from 'react'
 import * as THREE from 'three'
+import { GeneratingMarker } from './GeneratingMarker'
 import { Landmarks } from './Landmarks'
 import { TerrainMesh } from './TerrainMesh'
-import type { Landmark } from '@gbn/shared'
+import type { Landmark, Placement } from '@gbn/shared'
 import type { LayerKey } from '../state/types'
 import type { LoadedWorld } from './loadWorld'
 
@@ -14,6 +15,8 @@ interface Props {
   world: LoadedWorld
   layer: LayerKey
   landmarks: Landmark[]
+  /** 生成中的落点，非空时在该处显示占位体 */
+  generating?: Placement | null
   onSelectLandmark?: (l: Landmark) => void
   onPick?: (
     point: THREE.Vector3,
@@ -105,7 +108,9 @@ function SeaPlane({ world }: { world: LoadedWorld }) {
   )
 }
 
-export function WorldCanvas({ world, layer, landmarks, onPick, onSelectLandmark }: Props) {
+export function WorldCanvas({
+  world, layer, landmarks, generating, onPick, onSelectLandmark,
+}: Props) {
   const { sizeX, sizeZ, max } = world.spec
   const span = Math.max(sizeX, sizeZ)
   return (
@@ -120,6 +125,7 @@ export function WorldCanvas({ world, layer, landmarks, onPick, onSelectLandmark 
       <SeaPlane world={world} />
       <TerrainMesh world={world} layer={layer} onPick={onPick} />
       <Landmarks world={world} landmarks={landmarks} onSelect={onSelectLandmark} />
+      {generating && <GeneratingMarker placement={generating} />}
       <OrbitControls makeDefault enableDamping />
       <FitCamera world={world} />
     </Canvas>
