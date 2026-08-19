@@ -5,6 +5,10 @@ export interface TripoTask {
   status: 'queued' | 'running' | 'success' | 'failed' | 'cancelled'
   progress?: number
   output?: {
+    /** v3 的字段名。v2 用的是 pbr_model / model，两套都留着以防端点回退 */
+    model_url?: string
+    rendered_image_url?: string
+    generated_image_url?: string
     pbr_model?: string
     model?: string
     rendered_image?: string
@@ -37,6 +41,24 @@ export const createTextureTask = (b: { prompt: string; seedKey?: string }) =>
 
 export const getTask = (id: string) =>
   req<TripoTask>(`/api/tripo/task/${encodeURIComponent(id)}`)
+
+/**
+ * 把远端资产下载入库，换成稳定的本地地址。
+ * Tripo 的模型 URL 带签名且约 24 小时过期，直接存进数据第二天就是死链。
+ * key 传任务 id：签名会随过期时间变，用 URL 做去重键隔天就会重复下载。
+ */
+/** 从任务结果里取模型地址。v3 用 model_url，v2 用 pbr_model / model。 */
+export const modelUrlOf = (t: TripoTask): string | undefined =>
+  t.output?.model_url ?? t.output?.pbr_model ?? t.output?.model
+
+/** 取预览图地址，同样兼容两套字段名 */
+export const previewUrlOf = (t: TripoTask): string | undefined =>
+  t.output?.rendered_image_url ?? t.output?.rendered_image ?? t.output?.generated_image_url
+
+export const ingestAsset = (b: { url: string; key?: string }) =>
+  req<{ url: string; id: string; bytes: number }>('/api/assets/ingest', {
+    method: 'POST', body: JSON.stringify(b),
+  })
 
 export const getBalance = () =>
   req<{ balance?: number; frozen?: number }>('/api/tripo/balance')

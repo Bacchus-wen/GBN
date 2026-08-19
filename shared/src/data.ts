@@ -3,7 +3,7 @@
 // 直接改这两张图就能改地图，坐标为 (col, row)，odd-q 偏移六角网格。
 
 import type {
-  AiDraft, Contested, DraftKind, Landmark, Nation, Resource, Role, RoleKey,
+  AiDraft, Contested, DraftKind, Exhibit, Landmark, Nation, Resource, Role, RoleKey,
   Terrain, TerrainKey,
 } from './types.js'
 
@@ -289,6 +289,69 @@ export const AI_POOL: Record<DraftKind, AiDraft[]> = {
   ],
 }
 
+// ---------- 展览馆 ----------
+
+/** 每周主题活动，引导用户用 Tripo 生成、拓竹打印、上传世博展 */
+export const WEEKLY_THEME = '深海考古'
+
+export const EXHIBITS: Exhibit[] = [
+  {
+    id: 'ex-1', nationId: 'benchylvania', title: '沉船打捞舰 Salvager',
+    author: 'CosmosDestroyer', authorAvatar: 'CD', origin: 'ai',
+    prints: 218, likes: 96, theme: '深海考古', hasModel: true,
+  },
+  {
+    id: 'ex-2', nationId: 'benchylvania', title: '校准灯塔 Mk III',
+    author: 'ItzMpower', authorAvatar: 'IP', origin: 'human',
+    prints: 431, likes: 187, hasModel: true,
+  },
+  {
+    id: 'ex-3', nationId: 'benchylvania', title: '深潜 Benchy · 压载版',
+    author: 'AlexBench', authorAvatar: 'AB', origin: 'ai',
+    prints: 74, likes: 41, theme: '深海考古', hasModel: true,
+  },
+  {
+    id: 'ex-4', nationId: 'print-republic', title: '共和国档案方尖碑',
+    author: 'Vexillum', authorAvatar: 'VX', origin: 'human',
+    prints: 356, likes: 142, hasModel: true,
+  },
+  {
+    id: 'ex-5', nationId: 'print-republic', title: '沉没图书馆残骸',
+    author: 'PaperJam', authorAvatar: 'PJ', origin: 'ai',
+    prints: 129, likes: 88, theme: '深海考古', hasModel: true,
+  },
+  {
+    id: 'ex-6', nationId: 'benchyland', title: '珊瑚温室',
+    author: 'GreenLayer', authorAvatar: 'GL', origin: 'ai',
+    prints: 163, likes: 71, theme: '深海考古', hasModel: true,
+  },
+  {
+    id: 'ex-7', nationId: 'benchyland', title: '国民纪念门',
+    author: 'Brimstone', authorAvatar: 'BS', origin: 'human',
+    prints: 92, likes: 33, hasModel: false,
+  },
+  {
+    id: 'ex-8', nationId: 'carabbenchia', title: '暗礁掠夺者号',
+    author: 'ReefRunner', authorAvatar: 'RR', origin: 'ai',
+    prints: 287, likes: 155, theme: '深海考古', hasModel: true,
+  },
+  {
+    id: 'ex-9', nationId: 'allabenchia', title: '王冠浮标',
+    author: 'Regalia', authorAvatar: 'RG', origin: 'human',
+    prints: 118, likes: 62, hasModel: true,
+  },
+  {
+    id: 'ex-10', nationId: 'north-bench', title: '破冰 Benchy',
+    author: 'Frostbite', authorAvatar: 'FB', origin: 'ai',
+    prints: 201, likes: 104, theme: '深海考古', hasModel: true,
+  },
+  {
+    id: 'ex-11', nationId: 'north-bench', title: '冰下声呐站',
+    author: 'Frostbite', authorAvatar: 'FB', origin: 'ai',
+    prints: 57, likes: 29, theme: '深海考古', hasModel: true,
+  },
+]
+
 // ---------- 派生工具 ----------
 
 export const nationById = (id: string | null): Nation | undefined =>
@@ -321,3 +384,6 @@ export function buildCells(): Map<string, import('./types.js').Cell> {
   }
   return cells
 }
+
+export const exhibitsOf = (nationId: string | null): Exhibit[] =>
+  nationId ? EXHIBITS.filter(e => e.nationId === nationId) : []

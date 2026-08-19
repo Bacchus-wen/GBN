@@ -10,6 +10,10 @@ export interface AppState {
   selectedNation: string | null
   /** 地形上最近一次的落点：坐标 + 法线 */
   selectedPlacement: Placement | null
+  /** 落点所属的归属层字符：'.' 海洋、'*' 无主 */
+  selectedOwnerGlyph: string
+  /** 落点的地貌字符，见 TERRAIN */
+  selectedTerrainKey: string
   layer: LayerKey
   view: ViewMode
   queue: QueueItem[]
@@ -20,6 +24,22 @@ export interface AppState {
   nationOverrides: Record<string, Partial<Nation>>
   log: string[]
   toast: string | null
+  /** 用户的国籍。null 表示无国籍人士。mock 阶段落 localStorage */
+  citizenship: string | null
+  /** 是否已完成初次引导。二次登入直接进活动页 */
+  onboarded: boolean
+  /**
+   * 正在生成中的地标。Tripo 一次要 1-3 分钟，这段时间地图上先立一个占位体，
+   * 让用户看见东西正在这里长出来，而不是对着空地干等。
+   */
+  generating: { placement: Placement; label: string } | null
+  /**
+   * 选中的地标在 landmarks 数组里的下标。用下标而非 id 是因为 Landmark
+   * 目前没有 id 字段；核准只会往数组尾部追加，已有项的下标在会话内稳定。
+   */
+  selectedLandmarkIdx: number | null
+  /** 是否处于拖拽摆放状态。拖拽时会临时关掉轨道相机，避免抢手势。 */
+  draggingLandmark: boolean
 }
 
 function withOverride(
@@ -38,10 +58,33 @@ export function nationView(s: AppState, id: string | null): Nation | undefined {
   return ov ? { ...base, ...ov } : base
 }
 
+/**
+ * mock 阶段的持久化。接口形状按最终后端设计——将来换成真实用户档案时
+ * 只替换这两个函数，调用方不动。
+ */
+function readStored<T>(key: string, fallback: T): T {
+  try {
+    const raw = localStorage.getItem(key)
+    return raw === null ? fallback : (JSON.parse(raw) as T)
+  } catch {
+    return fallback
+  }
+}
+
+function writeStored(key: string, value: unknown): void {
+  try {
+    localStorage.setItem(key, JSON.stringify(value))
+  } catch {
+    // 隐私模式等场景下写不进去，不影响本次会话
+  }
+}
+
 export const initialState: AppState = {
   role: 'citizen',
   selectedNation: 'benchylvania',
   selectedPlacement: null,
+  selectedOwnerGlyph: '.',
+  selectedTerrainKey: '.',
   layer: 'owner',
   view: 'board',
   queue: [{
@@ -56,12 +99,17 @@ export const initialState: AppState = {
   nationOverrides: {},
   log: [],
   toast: null,
+  citizenship: readStored('gbn.citizenship', null),
+  onboarded: readStored('gbn.onboarded', false),
+  generating: null,
+  selectedLandmarkIdx: null,
+  draggingLandmark: false,
 }
 
 export type Action =
   | { type: 'setRole'; role: RoleKey }
   | { type: 'selectNation'; id: string }
-  | { type: 'pickPlacement'; placement: Placement }
+  | { type: 'pickPlacement'; placement: Placement; ownerGlyph: string; terrainKey: string }
   | { type: 'setLayer'; layer: LayerKey }
   | { type: 'setView'; view: ViewMode }
   | { type: 'submitQueue'; item: QueueItem }
@@ -69,6 +117,12 @@ export type Action =
   | { type: 'advanceAi'; kind: DraftKind }
   | { type: 'toast'; msg: string | null }
   | { type: 'addLandmark'; landmark: Landmark }
+  | { type: 'setCitizenship'; nationId: string | null }
+  | { type: 'setGenerating'; generating: AppState['generating'] }
+  | { type: 'selectLandmark'; idx: number | null }
+  | { type: 'setDragging'; dragging: boolean }
+  | { type: 'moveLandmark'; idx: number; placement: Placement }
+  | { type: 'snapLandmarks'; snap: (x: number, z: number) => Placement }
 
 export function reducer(s: AppState, a: Action): AppState {
   switch (a.type) {
@@ -78,8 +132,55 @@ export function reducer(s: AppState, a: Action): AppState {
     case 'selectNation':
       return { ...s, selectedNation: a.id }
 
+    case 'setGenerating':
+      return { ...s, generating: a.generating }
+
+    case 'selectLandmark':
+      return { ...s, selectedLandmarkIdx: a.idx, draggingLandmark: false }
+
+    case 'setDragging':
+      return { ...s, draggingLandmark: a.dragging }
+
+    // 种子地标的坐标是 authoring 期写死的，y 与法线都是占位值（那时拿不到
+    // 烘焙产物）。世界加载完就把它们一次性贴合到真实地形，让存的数据与
+    // 画出来的一致——否则面板会显示「高 0.0」而模型明明站在山上。
+    case 'snapLandmarks':
+      return {
+        ...s,
+        landmarks: s.landmarks.map(l => ({
+          ...l,
+          placement: a.snap(l.placement.x, l.placement.z),
+        })),
+      }
+
+    case 'moveLandmark': {
+      const landmarks = s.landmarks.map(
+        (l, i) => i === a.idx ? { ...l, placement: a.placement } : l,
+      )
+      return { ...s, landmarks }
+    }
+
+    case 'setCitizenship': {
+      writeStored('gbn.citizenship', a.nationId)
+      writeStored('gbn.onboarded', true)
+      return {
+        ...s,
+        citizenship: a.nationId,
+        onboarded: true,
+        selectedNation: a.nationId ?? s.selectedNation,
+        toast: a.nationId
+          ? `已加入 ${nationById(a.nationId)?.name ?? ''}，你的打印将计入该国 GDP`
+          : '你现在是无国籍人士，随时可以加入国家',
+      }
+    }
+
     case 'pickPlacement':
-      return { ...s, selectedPlacement: a.placement }
+      return {
+        ...s,
+        selectedPlacement: a.placement,
+        selectedOwnerGlyph: a.ownerGlyph,
+        selectedTerrainKey: a.terrainKey,
+      }
 
     case 'setLayer':
       return { ...s, layer: a.layer }

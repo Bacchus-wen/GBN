@@ -37,3 +37,6 @@ npm-debug.log*
 # 本地参考资料，不入库（论文 PDF 49MB，公开仓库里会拖慢 clone）
 *.pdf
 image.png
+
+# 生成资产落盘目录
+server/.assets/

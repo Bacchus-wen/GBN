@@ -13,6 +13,10 @@ export interface TripoTask {
   status: 'queued' | 'running' | 'success' | 'failed' | 'cancelled'
   progress?: number
   output?: {
+    /** v3 的字段名。v2 用的是 pbr_model / model，两套都留着以防端点回退 */
+    model_url?: string
+    rendered_image_url?: string
+    generated_image_url?: string
     pbr_model?: string
     model?: string
     rendered_image?: string
