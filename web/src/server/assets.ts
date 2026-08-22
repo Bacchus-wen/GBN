@@ -2,7 +2,16 @@
 //
 // Tripo 返回的模型 URL 带 CloudFront 签名与过期时间（实测约 24 小时），
 // GPT-Image 返回的也是第三方图床地址。直接把这些 URL 存进数据当作永久引用，
-// 第二天整个世界的模型就会集体 404。所以拿到就下载落盘，对外只暴露稳定的本地地址。
+// 第二天整个世界的模型就会集体 404。所以拿到就下载落盘，对外只暴露稳定地址。
+//
+// 存储按环境自动选驱动，不需要任何配置就能跑：
+//   blob        —— 配了 BLOB_READ_WRITE_TOKEN 时用 Vercel Blob，真正持久
+//   fs          —— 本地开发写 .assets/ 目录
+//   passthrough —— 两者都不可用时直接回传远端地址。世界仍然能渲染，
+//                  但链接会在约 24 小时后失效，只适合临时预览
+//
+// serverless 环境（Vercel）的文件系统是只读的，fs 驱动在那里必然失败，
+// 所以顺序是 blob → fs → passthrough。
 
 import { createHash } from 'node:crypto'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
@@ -15,21 +24,45 @@ const ASSET_DIR = resolve(process.cwd(), '.assets')
 /** 只接受这几种，避免把任意远端内容落到磁盘上 */
 const ALLOWED_EXT = new Set(['.glb', '.gltf', '.png', '.jpg', '.jpeg', '.webp'])
 
-/** 单个资产的体积上限，防止异常响应撑爆磁盘 */
+/** 单个资产的体积上限，防止异常响应撑爆磁盘或 Blob 配额 */
 const MAX_BYTES = 64 * 1024 * 1024
 
+export type AssetDriver = 'blob' | 'fs' | 'passthrough'
+
 export interface StoredAsset {
-  /** 稳定的本地地址，前端直接用 */
+  /** 稳定地址。blob 驱动是公网 URL，fs 驱动是本站 /api/assets/xxx */
   url: string
   id: string
   bytes: number
+  driver: AssetDriver
+}
+
+const hasBlob = () => Boolean(process.env.BLOB_READ_WRITE_TOKEN)
+
+/** serverless 上除 /tmp 外都是只读，写盘会抛 EROFS */
+const canWriteDisk = () => !process.env.VERCEL
+
+export function activeDriver(): AssetDriver {
+  if (hasBlob()) return 'blob'
+  if (canWriteDisk()) return 'fs'
+  return 'passthrough'
 }
 
 function extOf(remoteUrl: string): string {
   // 签名 URL 带一长串 query，取 pathname 才能拿到真扩展名
   const path = new URL(remoteUrl).pathname
-  const ext = extname(path).toLowerCase()
-  return ext || '.glb'
+  return extname(path).toLowerCase() || '.glb'
+}
+
+async function download(remoteUrl: string): Promise<Buffer> {
+  const res = await fetch(remoteUrl)
+  if (!res.ok) throw new HttpError(502, `下载资产失败 (${res.status})`)
+
+  const buf = Buffer.from(await res.arrayBuffer())
+  if (buf.byteLength > MAX_BYTES) {
+    throw new HttpError(413, `资产过大：${(buf.byteLength / 1048576).toFixed(1)}MB`)
+  }
+  return buf
 }
 
 /**
@@ -51,24 +84,47 @@ export async function ingest(remoteUrl: string, key?: string): Promise<StoredAss
   }
 
   const id = createHash('sha256').update(key ?? remoteUrl).digest('hex').slice(0, 32) + ext
-  const file = join(ASSET_DIR, id)
+  const driver = activeDriver()
 
+  if (driver === 'passthrough') {
+    console.warn(
+      '[gbn:assets] 未配置 BLOB_READ_WRITE_TOKEN 且文件系统只读，'
+      + '资产直通远端地址，约 24 小时后会失效',
+    )
+    return { url: remoteUrl, id, bytes: 0, driver }
+  }
+
+  if (driver === 'blob') {
+    const { head, put } = await import('@vercel/blob')
+    const path = `gbn/assets/${id}`
+
+    // 已经传过就直接复用，不重复下载
+    try {
+      const existing = await head(path)
+      if (existing) return { url: existing.url, id, bytes: existing.size, driver }
+    } catch {
+      // head 在不存在时抛错，属正常路径
+    }
+
+    const buf = await download(remoteUrl)
+    const blob = await put(path, buf, {
+      access: 'public',
+      contentType: MIME[ext] ?? 'application/octet-stream',
+      addRandomSuffix: false,
+    })
+    return { url: blob.url, id, bytes: buf.byteLength, driver }
+  }
+
+  const file = join(ASSET_DIR, id)
   if (existsSync(file)) {
     const buf = await readFile(file)
-    return { url: `/api/assets/${id}`, id, bytes: buf.byteLength }
+    return { url: `/api/assets/${id}`, id, bytes: buf.byteLength, driver }
   }
 
-  const res = await fetch(remoteUrl)
-  if (!res.ok) throw new HttpError(502, `下载资产失败 (${res.status})`)
-
-  const buf = Buffer.from(await res.arrayBuffer())
-  if (buf.byteLength > MAX_BYTES) {
-    throw new HttpError(413, `资产过大：${(buf.byteLength / 1048576).toFixed(1)}MB`)
-  }
-
+  const buf = await download(remoteUrl)
   await mkdir(ASSET_DIR, { recursive: true })
   await writeFile(file, buf)
-  return { url: `/api/assets/${id}`, id, bytes: buf.byteLength }
+  return { url: `/api/assets/${id}`, id, bytes: buf.byteLength, driver }
 }
 
 const MIME: Record<string, string> = {
@@ -80,7 +136,10 @@ const MIME: Record<string, string> = {
   '.webp': 'image/webp',
 }
 
-/** 读回已入库的资产。id 必须是入库时生成的形式，避免路径穿越。 */
+/**
+ * 读回 fs 驱动存下的资产。id 必须是入库时生成的形式，避免路径穿越。
+ * blob 驱动的资产由 Vercel CDN 直接提供，不走这里。
+ */
 export async function readAsset(id: string): Promise<{ body: Buffer; type: string }> {
   if (!/^[0-9a-f]{32}\.[a-z]+$/.test(id)) throw new HttpError(400, '非法资产 id')
 
