@@ -7,13 +7,13 @@
 // （也是界面图例上显示的数字），但那点起伏铺在数百单位宽的地面上几乎看不出来。
 // 与其偷偷调高基准高程让图例说谎，不如把夸张作为一个具名参数留在烘焙侧。
 
-import { dune, erode, ridge, terrace } from './geomorph.js'
-import { fbm, makeValueNoise2D } from './noise.js'
-import { maskAt } from './masks.js'
-import { mulberry32 } from './rng.js'
-import { TERRAIN_PROFILES } from './profiles.js'
-import type { RegionMasks } from './masks.js'
-import type { TerrainProfile } from './profiles.js'
+import { dune, erode, ridge, terrace } from './geomorph'
+import { fbm, makeValueNoise2D } from './noise'
+import { maskAt } from './masks'
+import { mulberry32 } from './rng'
+import { TERRAIN_PROFILES } from './profiles'
+import type { RegionMasks } from './masks'
+import type { TerrainProfile } from './profiles'
 
 export { TERRAIN_PROFILES }
 export type { TerrainProfile }

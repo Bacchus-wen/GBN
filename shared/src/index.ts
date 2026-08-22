@@ -1,3 +1,3 @@
-export * from './types.js'
-export * from './data.js'
-export * from './world/index.js'
+export * from './types'
+export * from './data'
+export * from './world/index'

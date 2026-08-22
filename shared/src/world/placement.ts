@@ -6,8 +6,8 @@
 // 法线则取自解析场的中心差分——三角面片法线是分片常量，直接用会让物体朝向
 // 在跨越面片时突跳。
 
-import { sampleHeight, sampleHeightOnMesh } from './heightfield.js'
-import type { Heightfield } from './heightfield.js'
+import { sampleHeight, sampleHeightOnMesh } from './heightfield'
+import type { Heightfield } from './heightfield'
 
 export interface Placement {
   x: number

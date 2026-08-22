@@ -1,9 +1,9 @@
 // 烘焙资产的二进制编码。刻意不引 PNG 依赖：
 // 高度走 Uint16 线性量化，区域走 Uint8 索引，元信息全在 world-spec.json 里。
 
-import { dominantRegion } from './masks.js'
-import type { RegionMasks } from './masks.js'
-import type { Heightfield } from './heightfield.js'
+import { dominantRegion } from './masks'
+import type { RegionMasks } from './masks'
+import type { Heightfield } from './heightfield'
 
 export interface WorldSpec {
   res: number

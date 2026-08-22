@@ -5,7 +5,7 @@
 import type {
   AiDraft, Contested, DraftKind, Exhibit, Landmark, Nation, Resource, Role, RoleKey,
   Terrain, TerrainKey,
-} from './types.js'
+} from './types'
 
 export const MAP_W = 16
 export const MAP_H = 10

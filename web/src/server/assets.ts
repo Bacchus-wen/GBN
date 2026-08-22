@@ -8,7 +8,7 @@ import { createHash } from 'node:crypto'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { extname, join, resolve } from 'node:path'
-import { HttpError } from './tripo.js'
+import { HttpError } from './tripo'
 
 const ASSET_DIR = resolve(process.cwd(), '.assets')
 

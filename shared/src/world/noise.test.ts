@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { hashSeed, mulberry32 } from './rng.js'
-import { fbm, makeValueNoise2D } from './noise.js'
+import { hashSeed, mulberry32 } from './rng'
+import { fbm, makeValueNoise2D } from './noise'
 
 describe('rng', () => {
   it('同种子产出同序列', () => {

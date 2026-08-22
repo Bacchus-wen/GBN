@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { buildMasks } from './masks.js'
-import { TERRAIN_PROFILES, buildHeightfield, sampleHeightOnMesh } from './heightfield.js'
-import { placementAt } from './placement.js'
+import { buildMasks } from './masks'
+import { TERRAIN_PROFILES, buildHeightfield, sampleHeightOnMesh } from './heightfield'
+import { placementAt } from './placement'
 
 const MESH_RES = 256
 

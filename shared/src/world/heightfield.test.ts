@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { buildMasks } from './masks.js'
+import { buildMasks } from './masks'
 import {
   TERRAIN_PROFILES, buildHeightfield, sampleHeight, sampleHeightOnMesh,
-} from './heightfield.js'
+} from './heightfield'
 
 const ROWS = [
   'ppppmmmm',

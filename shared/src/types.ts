@@ -1,6 +1,6 @@
 // GBN 领域类型。形状取自 activity-v2/data.js 的 mock 数据，保持一致以便直接迁移。
 
-import type { Placement } from './world/placement.js'
+import type { Placement } from './world/placement'
 
 /** 地形键。对应 TERRAIN_MAP 里的字符。 */
 export type TerrainKey = 'p' | 'f' | 'm' | 'c' | 'i' | 'r' | 'v' | 'd'

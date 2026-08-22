@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildMasks, dominantRegion, maskAt } from './masks.js'
+import { buildMasks, dominantRegion, maskAt } from './masks'
 
 const ROWS = [
   'aaaabbbb',

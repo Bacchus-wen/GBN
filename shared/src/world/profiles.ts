@@ -1,7 +1,7 @@
 // 每个地形键的 Eq.6 参数：基准高程 h_r、噪声层 w_{r,k}N_{r,k}、地貌算子 λ_{r,j}G_{r,j}。
 // base 沿用 shared/src/data.ts 里 TERRAIN.height 的取值，与既有数据保持一致。
 
-import type { GeomorphKind } from './geomorph.js'
+import type { GeomorphKind } from './geomorph'
 
 export interface NoiseLayer { freq: number; amp: number }
 

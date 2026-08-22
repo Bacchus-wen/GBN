@@ -39,4 +39,8 @@ npm-debug.log*
 image.png
 
 # 生成资产落盘目录
-server/.assets/
+web/.assets/
+
+# Next.js 构建产物
+.next/
+next-env.d.ts

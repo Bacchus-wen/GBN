@@ -4,11 +4,11 @@
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { NATIONS, OWNER_MAP, TERRAIN_MAP } from '../shared/src/data.js'
+import { NATIONS, OWNER_MAP, TERRAIN_MAP } from '../shared/src/data'
 import {
   TERRAIN_PROFILES, buildHeightfield, buildMasks, encodeHeights, encodeRegions,
-} from '../shared/src/world/index.js'
-import type { WorldSpec } from '../shared/src/world/index.js'
+} from '../shared/src/world/index'
+import type { WorldSpec } from '../shared/src/world/index'
 
 const RES = 512
 const MESH_RES = 256

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { dune, erode, ridge, terrace } from './geomorph.js'
+import { dune, erode, ridge, terrace } from './geomorph'
 
 describe('ridge 山脊算子', () => {
   it('噪声为 0 时脊线最高', () => {

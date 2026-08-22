@@ -1,3 +1,5 @@
+'use client'
+
 import { NATIONS, RESOURCE_COLOR, RESOURCE_ORDER, ROLES, TERRAIN, nationByGlyph } from '@gbn/shared'
 import { placementAt } from '@gbn/shared/world'
 import { useEffect, useReducer, useState } from 'react'

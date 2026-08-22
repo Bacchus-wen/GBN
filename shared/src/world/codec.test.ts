@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { buildMasks } from './masks.js'
-import { TERRAIN_PROFILES, buildHeightfield } from './heightfield.js'
-import { decodeHeights, encodeHeights, encodeRegions } from './codec.js'
+import { buildMasks } from './masks'
+import { TERRAIN_PROFILES, buildHeightfield } from './heightfield'
+import { decodeHeights, encodeHeights, encodeRegions } from './codec'
 
 const ROWS = ['ppmm', 'ppmm', 'ccii', 'ccii']
 const masks = buildMasks(ROWS, 32, 2)

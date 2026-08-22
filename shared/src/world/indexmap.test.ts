@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { sampleIndex } from './indexmap.js'
-import type { IndexMapView } from './indexmap.js'
+import { sampleIndex } from './indexmap'
+import type { IndexMapView } from './indexmap'
 
 /** 4×4 索引图，左上 0、右上 1、左下 2、右下 3 */
 const map: IndexMapView = {
